@@ -1,14 +1,9 @@
 package ru.spbau.karlina.task1;
 
-/**
- * Main class to run the programm
- * @author Liuba Karlina
- */
 public class Main {
 
     /**
-     * Main function to run program and checking hash table function
-     * @author Liuba Karlina
+     * Main function with checking hash table function
      * @param argc Parametrs of command lina (don't use)
      */
     public static void main(String[] argc) {
