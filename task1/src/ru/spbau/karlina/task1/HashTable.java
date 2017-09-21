@@ -23,8 +23,11 @@ public class HashTable {
     }
 
     public void clean() {
-       table = null;
-       sizeOfPairs = 0;
+        for (int i = 0; i < tableMax; ++i) {
+            table[i] = new List();
+        }
+
+        sizeOfPairs = 0;
     }
 
     /**
