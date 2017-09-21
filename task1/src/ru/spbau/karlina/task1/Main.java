@@ -1,7 +1,6 @@
 package ru.spbau.karlina.task1;
 
 public class Main {
-
     /**
      * Main function with checking hash table function
      * @param argc Parametrs of command lina (don't use)
