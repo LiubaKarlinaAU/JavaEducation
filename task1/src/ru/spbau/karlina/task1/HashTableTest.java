@@ -96,23 +96,104 @@ public class HashTableTest {
     @Test
     public void cleanAfterPutValues() throws Exception {
         HashTable table = new HashTable();
+
         table.put("key1", "value");
         table.put("key2", "value");
         table.put("key3", "value");
         table.put("key4", "value");
         table.clean();
+
         assertEquals(false, table.contains("key1"));
     }
 
     @Test
     public void cleanAfterPutValuesAndRemove() throws Exception {
         HashTable table = new HashTable();
+
         table.put("key1", "value");
         table.put("key2", "value");
         table.put("key3", "value");
         table.put("key4", "value");
         table.remove("key3");
         table.clean();
+
         assertEquals(0, table.size());
+    }
+
+    @Test
+    public void addManyDataAndRebuildChecking() throws Exception {
+        HashTable table = new HashTable();
+
+        table.put("key1", "value1");
+        table.put("key2", "value2");
+        table.put("key3", "value3");
+        table.put("key4", "value4");
+        table.put("key5", "value5");
+        table.put("key6", "value6");
+        table.put("key7", "value7");
+        table.put("key8", "value8");
+
+        assertEquals(8, table.size());
+    }
+
+    @Test
+    public void rebuildAndRemove() throws Exception {
+        HashTable table = new HashTable();
+
+        table.put("key1", "value1");
+        table.put("key2", "value2");
+        table.put("key3", "value3");
+        table.put("key4", "value4");
+        table.put("key5", "value5");
+        table.put("key6", "value6");
+        table.put("key7", "value7");
+        table.put("key8", "value8");
+
+        assertEquals(table.remove("key1"), "value1");
+    }
+
+    @Test
+    public void rebuildAndClean() throws Exception {
+        HashTable table = new HashTable();
+
+        table.put("key1", "value1");
+        table.put("key2", "value2");
+        table.put("key3", "value3");
+        table.put("key4", "value4");
+        table.put("key5", "value5");
+        table.put("key6", "value6");
+        table.put("key7", "value7");
+        table.put("key8", "value8");
+
+        table.clean();
+        table.put("key1", "value1");
+        assertEquals(1, table.size());
+    }
+
+    @Test
+    public void equalsHashCheckingFirst() throws Exception {
+        HashTable table = new HashTable();
+
+        table.put("ke", "value1");
+        table.put("ek", "value2");
+
+        assertEquals("value1", table.get("ke"));
+    }
+
+    @Test
+    public void equalsHashCheckingSecond() throws Exception {
+        HashTable table = new HashTable();
+        table.put("ke", "value1");
+        table.put("ek", "value2");
+        assertEquals("value2", table.get("ek"));
+    }
+
+    @Test
+    public void equalsHashCheckingRemove() throws Exception {
+        HashTable table = new HashTable();
+        table.put("ke", "value1");
+        table.put("ek", "value2");
+        table.remove("ke");
+        assertEquals("value2", table.get("ek"));
     }
 }

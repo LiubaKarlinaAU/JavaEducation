@@ -1,5 +1,7 @@
 package ru.spbau.karlina.task1.list;
 
+import ru.spbau.karlina.task1.SimpleHash;
+
 /** Simply connected List class */
 public class List {
     /** List element contains two String and pointer to next element */
@@ -29,21 +31,15 @@ public class List {
             if (current.key.equals(key)) {
                 String prev = current.value;
                 current.value = value;
-
                 return prev;
-            }
-
-            if (current.next == null) {
-                current.next = new Node(key, value);
-
-                return null;
             }
 
             current = current.next;
         }
 
+        current = head;
         head = new Node(key, value);
-
+        head.next = current;
         return null;
     }
 
@@ -53,6 +49,7 @@ public class List {
      */
     public String get(String key) {
         Node current = head;
+
         while (current != null) {
 
             if (current.key.equals(key)) {
@@ -91,7 +88,6 @@ public class List {
         if (head.key.equals(key)) {
             String value = head.value;
             head = head.next;
-
             return value;
         }
 
@@ -99,10 +95,10 @@ public class List {
         Node current = head.next;
 
         while (current != null) {
+
             if (current.key.equals(key)) {
                 String value = current.value;
                 prev.next = current.next;
-
                 return value;
             }
 
@@ -111,5 +107,14 @@ public class List {
         }
 
         return null;
+    }
+
+    public void fillArrayWithStoringPairs( List[] newTable, SimpleHash hash ) {
+        Node current = head;
+
+        while (current != null) {
+            newTable[hash.getHash(current.key)].add(current.key, current.value);
+            current = current.next;
+        }
     }
 }
