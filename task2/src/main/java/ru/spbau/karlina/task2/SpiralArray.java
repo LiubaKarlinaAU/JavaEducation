@@ -9,19 +9,19 @@ public class SpiralArray {
 
     /** Save iverted matrix */
     public SpiralArray(int[][] newMatrix) {
-        int N = newMatrix.length;
-        matrix = new int[N][N];
+        int n = newMatrix.length;
+        matrix = new int[n][n];
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++)
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
                 matrix[i][j] = newMatrix[j][i];
         }
     }
 
     public void simpleOutput() {
-        int N = matrix.length;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 System.out.print(matrix[j][i] + " ");
             }
             System.out.print('\n');
@@ -29,12 +29,12 @@ public class SpiralArray {
     }
 
     public void spiralOutput() {
-        int N = matrix.length;
-        int i = N / 2, j = N / 2;
+        int n = matrix.length;
+        int i = n / 2, j = n / 2;
         int tmpI, tmpJ, range = 2;
         System.out.print(matrix[i][j] + " ");
 
-        while (range < N) {
+        while (range < n) {
             i--;
             j--;
 
