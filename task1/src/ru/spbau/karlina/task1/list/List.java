@@ -1,5 +1,6 @@
 package ru.spbau.karlina.task1.list;
 
+import jdk.internal.util.xml.impl.Pair;
 import ru.spbau.karlina.task1.SimpleHash;
 
 /** Simply connected List class */
@@ -109,12 +110,26 @@ public class List {
         return null;
     }
 
-    public void fillArrayWithStoringPairs( List[] newTable, SimpleHash hash ) {
-        Node current = head;
+    public String getHeadKey() {
+           if (head != null) {
+               return head.key;
+           }
 
-        while (current != null) {
-            newTable[hash.getHash(current.key)].add(current.key, current.value);
-            current = current.next;
+           return null;
+    }
+
+    public String getHeadValue() {
+        if (head != null) {
+            return head.value;
+        }
+
+        return null;
+    }
+
+    /** Remove list head */
+    public void pop() {
+        if (head != null) {
+            head = head.next;
         }
     }
 }

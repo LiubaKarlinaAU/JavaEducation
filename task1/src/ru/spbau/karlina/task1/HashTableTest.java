@@ -171,6 +171,22 @@ public class HashTableTest {
     }
 
     @Test
+    public void sizeAfterRebuild() throws Exception {
+        HashTable table = new HashTable();
+
+        table.put("key1", "value1");
+        table.put("key2", "value2");
+        table.put("key3", "value3");
+        table.put("key4", "value4");
+        table.put("key5", "value5");
+        table.put("key6", "value6");
+        table.put("key7", "value7");
+        table.put("key8", "value8");
+
+        assertEquals(8, table.size());
+    }
+
+    @Test
     public void equalsHashCheckingFirst() throws Exception {
         HashTable table = new HashTable();
 
@@ -183,8 +199,10 @@ public class HashTableTest {
     @Test
     public void equalsHashCheckingSecond() throws Exception {
         HashTable table = new HashTable();
+        SimpleHash sim = new SimpleHash(12);
         table.put("ke", "value1");
         table.put("ek", "value2");
+        assertEquals(true, sim.getHash("ke") == sim.getHash("ek"));
         assertEquals("value2", table.get("ek"));
     }
 

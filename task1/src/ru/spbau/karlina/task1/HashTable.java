@@ -89,9 +89,12 @@ public class HashTable {
         makeInitialization(newTable, hashTableMax);
         hash.changeRange(hashTableMax);
 
-        for (int i = 0; i < hashTableMax / 2; i++)
-            table[i].fillArrayWithStoringPairs(newTable, hash);
-
+        for (int i = 0; i < hashTableMax / 2; i++) {
+            while (table[i].getHeadKey() != null) {
+                newTable[hash.getHash(table[i].getHeadKey())].add(table[i].getHeadKey(), table[i].getHeadValue());
+                table[i].pop();
+            }
+        }
         table = newTable;
     }
 }

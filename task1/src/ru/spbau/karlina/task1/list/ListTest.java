@@ -1,8 +1,67 @@
 package ru.spbau.karlina.task1.list;
 
+import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class ListTest {
+    @Test
+    public void getHeadKeyInEmptyList() throws Exception {
+      assertEquals(null, new List().getHeadKey());
+    }
+
+    @Test
+    public void getHeadKeyAfterAddingOneElement() throws Exception {
+        List list = new List();
+        list.add("key1", "value1");
+        assertEquals("key1", list.getHeadKey());
+    }
+
+    @Test
+    public void getHeadKeyAfterAddingTwoElements() throws Exception {
+        List list = new List();
+        list.add("key2", "value2");
+        list.add("key1", "value1");
+        assertEquals("key1", list.getHeadKey());
+    }
+
+    @Test
+    public void getHeadValueInEmptyList() throws Exception {
+        assertEquals(null, new List().getHeadValue());
+    }
+
+    @Test
+    public void getHeadValueAfterAddingOneElement() throws Exception {
+        List list = new List();
+        list.add("key1", "value1");
+        assertEquals("value1", list.getHeadValue());
+    }
+
+    @Test
+    public void getHeadValueAfterAddingTwoElements() throws Exception {
+        List list = new List();
+        list.add("key2", "value2");
+        list.add("key1", "value1");
+        assertEquals("value1", list.getHeadValue());
+    }
+
+    @Test
+    public void popAfterAddingElement() throws Exception {
+        List list = new List();
+        list.add("key1", "value1");
+        list.pop();
+        assertEquals(null, list.getHeadValue());
+    }
+
+    @Test
+    public void popAfterAddingTwoElements() throws Exception {
+        List list = new List();
+        list.add("key1", "value1");
+        list.add("key2", "value2");
+        list.pop();
+        assertEquals("value1", list.getHeadValue());
+    }
+
     @org.junit.Test
     public void getInEmptyList() throws Exception {
         assertEquals(null, new List().get("key1"));
