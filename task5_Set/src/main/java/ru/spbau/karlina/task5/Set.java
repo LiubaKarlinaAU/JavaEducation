@@ -1,7 +1,8 @@
 package ru.spbau.karlina.task5;
 
-/** Set class with three public methods^ add, size, contains */
-public class Set<T extends Comparable> {
+/** Set class for storing object
+ *  Contain three public methods: add, size, contains */
+public class Set<T extends Comparable<T>> {
     /** Inner class for tree realization */
     private class Node {
         private T data;
@@ -34,7 +35,6 @@ public class Set<T extends Comparable> {
             return false;
         }
 
-
         if (current.left == null) {
             current.left = new Node(object);
             current.size++;
@@ -48,6 +48,7 @@ public class Set<T extends Comparable> {
     }
 
     /** Add object to set if there wasn't such element before
+     * @param @Notnull object T for adding
      * @return true if adding was successful and false in otherwise */
     public boolean add(T object) {
         if (head == null) {
@@ -57,7 +58,7 @@ public class Set<T extends Comparable> {
         return recursiveAdd(head, object);
     }
 
-    /** Return size of all elements that is storing in set now*/
+    /** Return size of all elements that is storing in set now */
     public int size() {
         if (head != null) {
             return head.size;
@@ -66,6 +67,8 @@ public class Set<T extends Comparable> {
         return 0;
     }
 
+    /** Checking existing of element in set
+     *  @return true if element is storing in set now and false otherwise */
     public boolean contains(T object) {
         if (head == null) {
             return false;

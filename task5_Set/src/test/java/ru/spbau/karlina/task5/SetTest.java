@@ -5,26 +5,26 @@ import static org.junit.Assert.*;
 public class SetTest {
     @org.junit.Test
     public void sizeInEmptySet() throws Exception {
-        Set<Integer> set = new Set<Integer>();
+        Set<Integer> set = new Set();
         assertEquals(0, set.size());
     }
 
     @org.junit.Test
     public void containsInEmptySet() throws Exception {
-        Set<Integer> set = new Set<Integer>();
+        Set<Integer> set = new Set();
         assertEquals(false, set.contains(4));
     }
 
     @org.junit.Test
     public void addOneElement() throws Exception {
-        Set<Integer> set = new Set<Integer>();
+        Set<Integer> set = new Set();
         set.add(3);
         assertEquals(1, set.size());
     }
 
     @org.junit.Test
     public void addTwoEqualElements() throws Exception {
-        Set<Integer> set = new Set<Integer>();
+        Set<Integer> set = new Set();
         set.add(3);
         set.add(3);
         assertEquals(1, set.size());
@@ -32,7 +32,7 @@ public class SetTest {
 
     @org.junit.Test
     public void sizeAfterAddingTwoDifferentElements() throws Exception {
-        Set<Integer> set = new Set<Integer>();
+        Set<Integer> set = new Set();
         set.add(3);
         set.add(4);
         assertEquals(2, set.size());
@@ -40,7 +40,7 @@ public class SetTest {
 
     @org.junit.Test
     public void containsAfterAddingTwoDifferentElements() throws Exception {
-        Set<Integer> set = new Set<Integer>();
+        Set<Integer> set = new Set();
         set.add(3);
         set.add(4);
         assertEquals(true, set.contains(3));
@@ -48,7 +48,7 @@ public class SetTest {
 
     @org.junit.Test
     public void containsAfterAddingSomeElements() throws Exception {
-        Set<Integer> set = new Set<Integer>();
+        Set<Integer> set = new Set();
         set.add(3);
         set.add(4);
         set.add(567);
