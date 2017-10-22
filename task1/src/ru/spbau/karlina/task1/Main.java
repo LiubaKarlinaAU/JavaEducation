@@ -1,5 +1,6 @@
 package ru.spbau.karlina.task1;
 
+/** Main class with only one main methoud */
 public class Main {
     /**
      * Main function with checking hash table function
