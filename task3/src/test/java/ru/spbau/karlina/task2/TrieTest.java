@@ -7,13 +7,17 @@ import java.io.*;
 import static org.junit.Assert.*;
 
 public class TrieTest {
+    @Test
+    public void add() throws Exception {
+    }
+
     /** Add some elements with equal prefix */
     @Test
     public void addTest1() throws Exception {
         Trie trie = new Trie();
         trie.add("s");
         trie.add("str");
-        trie.add("strlen");
+        trie.add("string length");
         trie.remove("sa");
         assertEquals(false, trie.contains("sa"));
     }
@@ -24,7 +28,7 @@ public class TrieTest {
         assertEquals(0, new Trie().size());
     }
 
-    /** Testing after adding one elemnt */
+    /** Testing after adding one element */
     @Test
     public void sizeTest2() throws Exception {
         Trie trie = new Trie();
@@ -32,7 +36,7 @@ public class TrieTest {
         assertEquals(1, trie.size());
     }
 
-    /** Testing after adding twodifferent  elements */
+    /** Testing after adding two different  elements */
     @Test
     public void sizeTest3() throws Exception {
         Trie trie = new Trie();
@@ -172,7 +176,7 @@ public class TrieTest {
         Trie secondTrie = new Trie();
         firstTrie.add("s");
         firstTrie.add("str");
-        firstTrie.add("strel");
+        firstTrie.add("string");
         firstTrie.add("ty");
         ByteArrayOutputStream fos = new ByteArrayOutputStream();
         firstTrie.serialize(fos);
@@ -188,7 +192,7 @@ public class TrieTest {
         Trie secondTrie = new Trie();
         firstTrie.add("s");
         firstTrie.add("str");
-        firstTrie.add("strel");
+        firstTrie.add("string");
         firstTrie.add("ty");
         ByteArrayOutputStream fos = new ByteArrayOutputStream();
         firstTrie.serialize(fos);
@@ -203,7 +207,7 @@ public class TrieTest {
         assertEquals(0, new Trie().howManyStartsWithPrefix("asd"));
     }
 
-    /** Testing in one elemnt trie */
+    /** Testing in one element trie */
     @Test
     public void howManyStartsWithTest2() throws Exception {
         Trie trie = new Trie();

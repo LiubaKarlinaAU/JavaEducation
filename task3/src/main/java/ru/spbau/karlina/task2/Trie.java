@@ -6,11 +6,11 @@ import java.util.Hashtable;
 /** Class Trie contain static class Node inside */
 public class Trie implements Serializable {
     /** Tree element with Terminal mark - mean it corresponds to storing string */
-    static class Node implements Serializable {
+    private static class Node implements Serializable {
         private boolean isTerminal = false;
         private final int depth;
         private int countOfData = 0;
-        Hashtable<Character, Node> childrens = new Hashtable<Character, Node>();
+        private Hashtable<Character, Node> children = new Hashtable();
 
         private Node(int depth) {
             this.depth = depth;
@@ -19,24 +19,23 @@ public class Trie implements Serializable {
 
     private Node root = new Node(0);
 
-    /**
-     * @param element for finding
-     * @return latest node with equal to given string prefix
-     * */
+    /** @param element for finding
+     *  @return latest node with equal to given string prefix */
     private Node find(Node current, String element) {
-        if (element.length() > current.depth && current.childrens.containsKey(element.charAt(current.depth))) {
-            return find(current.childrens.get(element.charAt(current.depth)), element);
+        if (element.length() > current.depth && current.children.containsKey(element.charAt(current.depth))) {
+            return find(current.children.get(element.charAt(current.depth)), element);
         }
         return current;
     }
 
-    /** Change countOfData in necessary nodes to correct adding String element in the trie */
-    private void addOnPath(Node current, String element, int dif, int depth) {
+    /** Change countOfData in necessary nodes to correct adding String element in the trie.
+     *  @param difference count of new nodes in subtree of current node */
+    private void addOnPath(Node current, String element, int difference, int depth) {
         if (depth > current.depth) {
-            current.countOfData += dif;
+            current.countOfData += difference;
             if (depth > current.depth + 1) {
-                addOnPath(current.childrens.get(element.charAt(current.depth)),
-                        element, dif, depth);
+                addOnPath(current.children.get(element.charAt(current.depth)),
+                        element, difference, depth);
             }
         }
     }
@@ -45,7 +44,7 @@ public class Trie implements Serializable {
     private void makeNodePath(Node current, String element) {
         if (current.depth < element.length()) {
             Node tmp = new Node(current.depth + 1);
-            current.childrens.put(element.charAt(current.depth), tmp);
+            current.children.put(element.charAt(current.depth), tmp);
             makeNodePath(tmp, element);
         } else {
             current.isTerminal = true;
@@ -65,12 +64,12 @@ public class Trie implements Serializable {
             }
             return true;
         }
-        if (current.childrens.containsKey(element.charAt(current.depth))) {
-            Node next = current.childrens.get(element.charAt(current.depth));
+        if (current.children.containsKey(element.charAt(current.depth))) {
+            Node next = current.children.get(element.charAt(current.depth));
             if (findForRemoval(next, element)) {
 
                 if (next.countOfData == 0) {
-                    current.childrens.remove(element.charAt(current.depth));
+                    current.children.remove(element.charAt(current.depth));
                 }
                 current.countOfData--;
                 return true;
@@ -81,6 +80,7 @@ public class Trie implements Serializable {
 
     /**
      * Trying to add element
+     * Time: O(String length)
      * @param element for adding
      * @return false if found element in trie and true (with adding element )in otherwise
      * */
@@ -97,7 +97,7 @@ public class Trie implements Serializable {
     /**
      * Trying to find such element in trie
      * @param element for finding
-     * @return false if didn't find and treu in otherwise
+     * @return false if didn't find and true in otherwise
      * */
     public boolean contains(String element) {
         Node found = find(root, element);
@@ -136,7 +136,7 @@ public class Trie implements Serializable {
             outputStream.close();
     }
 
-    /** Deserialise trie(this) from input stream */
+    /** Deserialize trie(this) from input stream */
     public void deserialize(InputStream in) throws IOException, ClassNotFoundException {
         ObjectInputStream inputStream = new ObjectInputStream((in));
         Trie trie = (Trie)inputStream.readObject();
