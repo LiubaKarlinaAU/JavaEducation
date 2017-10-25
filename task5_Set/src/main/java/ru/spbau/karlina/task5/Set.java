@@ -1,5 +1,7 @@
 package ru.spbau.karlina.task5;
 
+import org.jetbrains.annotations.NotNull;
+
 /** Set class for storing object
  *  Contain three public methods: add, size, contains */
 public class Set<T extends Comparable<T>> {
@@ -24,8 +26,9 @@ public class Set<T extends Comparable<T>> {
     }
 
     /** Checking existing of element in set
+     *  @param @Notnull object T for finding
      *  @return true if element is storing in set now and false otherwise */
-    public boolean contains(T object) {
+    public boolean contains(@NotNull T object) {
         if (head == null) {
             return false;
         }
@@ -46,6 +49,7 @@ public class Set<T extends Comparable<T>> {
 
         return false;
     }
+
     /** Inner class for tree realization */
     private class Node {
         private T data;
