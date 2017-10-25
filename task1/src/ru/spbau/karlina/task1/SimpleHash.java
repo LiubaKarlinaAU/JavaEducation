@@ -1,15 +1,13 @@
 package ru.spbau.karlina.task1;
 
 public class SimpleHash {
-    private int range;
-
     public SimpleHash(int maximum) {
         range = maximum;
     }
 
-    /**
-     * @param key String to make hash
-     * @return Number in range 0...(range - 1)
+    /** Make and return hash code
+     *  @param key String to make hash
+     *  @return Number in range 0...(range - 1)
      */
     public int getHash(String key) {
         int hash = 7;
@@ -21,7 +19,10 @@ public class SimpleHash {
         return hash % range;
     }
 
+    /** Change range for making hash code */
     public void changeRange(int newRange) {
         range = newRange;
     }
+
+    private int range;
 }

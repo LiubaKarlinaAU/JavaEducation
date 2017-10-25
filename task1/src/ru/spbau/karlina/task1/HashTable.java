@@ -7,19 +7,8 @@ import ru.spbau.karlina.task1.list.List;
  * Rebuild when count of storing pairs became more than 2 * hashTableMax
  */
 public class HashTable {
-    private int hashTableMax = 4;
-    private List[] table = new List[hashTableMax];
-    private int sizeOfPairs;
-    private SimpleHash hash = new SimpleHash(hashTableMax);
-
     public HashTable() {
         makeInitialization(table, hashTableMax);
-    }
-
-    private static void makeInitialization(List[] array, int arraySize) {
-        for (int i = 0; i < arraySize; ++i) {
-            array[i] = new List();
-        }
     }
 
     /** Return amount of all stored pairs */
@@ -27,14 +16,15 @@ public class HashTable {
         return sizeOfPairs;
     }
 
+    /** Clean Hash-table */
     public void clean() {
         makeInitialization(table, hashTableMax);
         sizeOfPairs = 0;
     }
 
-    /**
-     * @param key Qualifier for finding
-     * @return deleted string value with input key and null if there isn't such pair
+    /** Remove pair element with input key if it was in hash-table
+     *  @param key Qualifier for finding
+     *  @return deleted string value with input key and null if there isn't such pair
      */
     public String remove(String key) {
         List list = table[hash.getHash(key)];
@@ -46,26 +36,26 @@ public class HashTable {
         return string;
     }
 
-    /**
-     * @param key Qualifier for finding
-     * @return string value from pair with input key and null if there isn't such pair
+    /** Find and return string pair of input key
+     *  @param key Qualifier for finding
+     *  @return string value from pair with input key and null if there isn't such pair
      */
     public String get(String key) {
         return table[hash.getHash(key)].get(key);
     }
 
-    /**
-     * @param key Qualifier for finding
-     * @return true if there is a pair with input key and false in other case
+    /** Checking existing pair with input key in hash-table
+     *  @param key Qualifier for finding
+     *  @return true if there is a pair with input key and false in other case
      */
     public boolean contains(String key) {
        return table[hash.getHash(key)].contains(key);
     }
 
-    /**
-     * @param key Qualifier of input string value
-     * @param value String data
-     * @return previous string value from pair with input key and null if there isn't such pair before
+    /** Insert new pair to hash-table and make rebuild if necessary
+     *  @param key Qualifier of input string value
+     *  @param value String data
+     *  @return previous string value from pair with input key and null if there isn't such pair before
      */
     public String put(String key, String value) {
         List list = table[hash.getHash(key)];
@@ -96,5 +86,16 @@ public class HashTable {
             }
         }
         table = newTable;
+    }
+
+    private int hashTableMax = 4;
+    private List[] table = new List[hashTableMax];
+    private int sizeOfPairs;
+    private SimpleHash hash = new SimpleHash(hashTableMax);
+
+    private static void makeInitialization(List[] array, int arraySize) {
+        for (int i = 0; i < arraySize; ++i) {
+            array[i] = new List();
+        }
     }
 }

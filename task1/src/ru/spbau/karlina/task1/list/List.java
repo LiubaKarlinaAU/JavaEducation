@@ -5,20 +5,6 @@ import ru.spbau.karlina.task1.SimpleHash;
 
 /** Simply connected List class */
 public class List {
-    /** List element contains two String and pointer to next element */
-    static class Node {
-        private String key;
-        private String value;
-        private Node next = null;
-
-        public Node(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-    }
-
-    private Node head = null;
-
     /**
      * Add instead of node with input key or make new one in the end of list
      * @param key Qualifier of input string value
@@ -44,9 +30,9 @@ public class List {
         return null;
     }
 
-    /**
-     * @param key Qualifier for finding
-     * @return string value from node with input key and null if there isn't such node
+    /** Find a pair(Node) with input key
+     *  @param key Qualifier for finding
+     *  @return string value from node with input key and null if there isn't such node
      */
     public String get(String key) {
         Node current = head;
@@ -63,9 +49,9 @@ public class List {
         return null;
     }
 
-    /**
-     * @param key Qualifier for finding
-     * @return true if there is node with input key and false in other case
+    /** Checking existing element with such key in list using get method
+     *  @param key Qualifier for finding
+     *  @return true if there is node with input key and false in other case
      */
     public boolean contains(String key) {
         String string = get(key);
@@ -77,9 +63,9 @@ public class List {
         return true;
     }
 
-    /**
-     * @param key Qualifier for finding
-     * @return string value from node with input key and null if there isn't such node
+    /** Remove Node with input key if it was in list
+     *  @param key Qualifier for finding
+     *  @return string value from node with input key and null if there isn't such node
      */
     public String remove(String key) {
         if (head == null) {
@@ -132,4 +118,18 @@ public class List {
             head = head.next;
         }
     }
+
+    /** List element contains two String and pointer to next element */
+    static private class Node {
+        private String key;
+        private String value;
+        private Node next = null;
+
+        public Node(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private Node head = null;
 }
