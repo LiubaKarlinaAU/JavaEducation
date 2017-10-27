@@ -70,7 +70,7 @@ public class MaybeTest {
     @Test
     public void mapStringLengthTest() throws Exception {
         Maybe<String> maybe = Maybe.just("string");
-        assertEquals(new Integer(5), maybe.map(String::length).get());
+        assertEquals(new Integer(6), maybe.map(String::length).get());
     }
 
     @Test

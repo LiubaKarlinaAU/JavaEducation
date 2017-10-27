@@ -7,12 +7,6 @@ import java.util.function.Function;
  */
 @SuppressWarnings("WeakerAccess")
 public class Maybe<T> {
-    private T data = null;
-
-    private Maybe(T t) {
-        data = t;
-    }
-
     /**
      * Set value
      */
@@ -29,6 +23,7 @@ public class Maybe<T> {
 
     /**
      * Give object or throw MaybeException if object was null
+     * @throws MaybeException if storing data is null
      */
     public T get() throws MaybeException {
         if (data == null) {
@@ -58,5 +53,11 @@ public class Maybe<T> {
         }
 
         return new Maybe<>(null);
+    }
+
+    private T data = null;
+
+    private Maybe(T t) {
+        data = t;
     }
 }
