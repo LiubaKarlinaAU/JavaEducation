@@ -10,7 +10,7 @@ public class Trie implements Serializable {
         private boolean isTerminal = false;
         private final int depth;
         private int countOfData = 0;
-        private Hashtable<Character, Node> children = new Hashtable();
+        private final Hashtable<Character, Node> children = new Hashtable();
 
         private Node(int depth) {
             this.depth = depth;
@@ -96,19 +96,18 @@ public class Trie implements Serializable {
 
     /**
      * Trying to find such element in trie
+     * Time: O(String length)
      * @param element for finding
      * @return false if didn't find and true in otherwise
      * */
     public boolean contains(String element) {
         Node found = find(root, element);
-        if (element.length() == found.depth && found.isTerminal) {
-            return true;
-        }
-        return false;
+        return element.length() == found.depth && found.isTerminal;
     }
 
     /**
      * Trying to find such element and remove it
+     * Time: O(String length)
      * @param element to remove
      * @return false if didn't find and true (with removable) in otherwise
      * */
@@ -129,14 +128,19 @@ public class Trie implements Serializable {
         return found.countOfData;
     }
 
-    /** Serialize trie(this) into output stream */
+    /** Serialize trie(this) into output stream
+     *  @throws IOException in case of problem with making ObjectOutputStream
+     *  @param out - is an output stream where method is recording serializing tree */
     public void serialize(OutputStream out) throws IOException {
         ObjectOutputStream outputStream = new ObjectOutputStream(out);
             outputStream.writeObject(this);
             outputStream.close();
     }
 
-    /** Deserialize trie(this) from input stream */
+    /** Deserialize trie(to this) from input stream
+     *  @throws IOException if there is a problem with making ObjectInputStream
+     *  @throws ClassNotFoundException in case of problem with reading object from ObjectInputStream
+     *  @param in - is an input stream from where method read bytes and deserialize a tree */
     public void deserialize(InputStream in) throws IOException, ClassNotFoundException {
         ObjectInputStream inputStream = new ObjectInputStream((in));
         Trie trie = (Trie)inputStream.readObject();

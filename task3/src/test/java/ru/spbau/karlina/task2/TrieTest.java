@@ -8,7 +8,8 @@ import static org.junit.Assert.*;
 
 public class TrieTest {
     @Test
-    public void add() throws Exception {
+    public void addOneElement() throws Exception {
+       assertEquals(true, new Trie().add("f"));
     }
 
     /** Add some elements with equal prefix */
