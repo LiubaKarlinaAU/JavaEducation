@@ -5,6 +5,75 @@ import java.util.Hashtable;
 
 /** Class Trie contain static class Node inside */
 public class Trie implements Serializable {
+    /**
+     * Trying to add element
+     * Time: O(String length)
+     * @param element for adding
+     * @return false if found element in trie and true (with adding element )in otherwise
+     * */
+    public boolean add(String element) {
+        Node found = find(root, element);
+        if (element.length() == found.depth && found.isTerminal) {
+            return false;
+        }
+        addOnPath(root, element, 1, found.depth);
+        makeNodePath(found, element);
+        return true;
+    }
+
+    /**
+     * Trying to find such element in trie
+     * Time: O(String length)
+     * @param element for finding
+     * @return false if didn't find and true in otherwise
+     * */
+    public boolean contains(String element) {
+        Node found = find(root, element);
+        return element.length() == found.depth && found.isTerminal;
+    }
+
+    /**
+     * Trying to find such element and remove it
+     * Time: O(String length)
+     * @param element to remove
+     * @return false if didn't find and true (with removable) in otherwise
+     * */
+    public boolean remove(String element) {
+        return findForRemoval(root, element);
+    }
+
+    public int size() {
+        return root.countOfData;
+    }
+
+    /** Count amount of string with given prefix */
+    public int howManyStartsWithPrefix(String prefix) {
+        Node found = find(root, prefix);
+        if (found == root) {
+            return 0;
+        }
+        return found.countOfData;
+    }
+
+    /** Serialize trie(this) into output stream
+     *  @throws IOException in case of problem with making ObjectOutputStream
+     *  @param out - is an output stream where method is recording serializing tree */
+    public void serialize(OutputStream out) throws IOException {
+        ObjectOutputStream outputStream = new ObjectOutputStream(out);
+            outputStream.writeObject(this);
+            outputStream.close();
+    }
+
+    /** Deserialize trie(to this) from input stream
+     *  @throws IOException if there is a problem with making ObjectInputStream
+     *  @throws ClassNotFoundException in case of problem with reading object from ObjectInputStream
+     *  @param in - is an input stream from where method read bytes and deserialize a tree */
+    public void deserialize(InputStream in) throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream = new ObjectInputStream((in));
+        Trie trie = (Trie)inputStream.readObject();
+        root = trie.root;
+    }
+
     /** Tree element with Terminal mark - mean it corresponds to storing string */
     private static class Node implements Serializable {
         private boolean isTerminal = false;
@@ -76,74 +145,5 @@ public class Trie implements Serializable {
             }
         }
         return false;
-    }
-
-    /**
-     * Trying to add element
-     * Time: O(String length)
-     * @param element for adding
-     * @return false if found element in trie and true (with adding element )in otherwise
-     * */
-    public boolean add(String element) {
-        Node found = find(root, element);
-        if (element.length() == found.depth && found.isTerminal) {
-            return false;
-        }
-        addOnPath(root, element, 1, found.depth);
-        makeNodePath(found, element);
-        return true;
-    }
-
-    /**
-     * Trying to find such element in trie
-     * Time: O(String length)
-     * @param element for finding
-     * @return false if didn't find and true in otherwise
-     * */
-    public boolean contains(String element) {
-        Node found = find(root, element);
-        return element.length() == found.depth && found.isTerminal;
-    }
-
-    /**
-     * Trying to find such element and remove it
-     * Time: O(String length)
-     * @param element to remove
-     * @return false if didn't find and true (with removable) in otherwise
-     * */
-    public boolean remove(String element) {
-        return findForRemoval(root, element);
-    }
-
-    public int size() {
-        return root.countOfData;
-    }
-
-    /** Count amount of string with given prefix */
-    public int howManyStartsWithPrefix(String prefix) {
-        Node found = find(root, prefix);
-        if (found == root) {
-            return 0;
-        }
-        return found.countOfData;
-    }
-
-    /** Serialize trie(this) into output stream
-     *  @throws IOException in case of problem with making ObjectOutputStream
-     *  @param out - is an output stream where method is recording serializing tree */
-    public void serialize(OutputStream out) throws IOException {
-        ObjectOutputStream outputStream = new ObjectOutputStream(out);
-            outputStream.writeObject(this);
-            outputStream.close();
-    }
-
-    /** Deserialize trie(to this) from input stream
-     *  @throws IOException if there is a problem with making ObjectInputStream
-     *  @throws ClassNotFoundException in case of problem with reading object from ObjectInputStream
-     *  @param in - is an input stream from where method read bytes and deserialize a tree */
-    public void deserialize(InputStream in) throws IOException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream((in));
-        Trie trie = (Trie)inputStream.readObject();
-        root = trie.root;
     }
 }
