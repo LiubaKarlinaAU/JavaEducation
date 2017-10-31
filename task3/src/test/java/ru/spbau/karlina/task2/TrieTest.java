@@ -145,6 +145,38 @@ public class TrieTest {
         assertEquals(false, trie.contains("sa"));
     }
 
+    /** Testing serialize using right bytes from file on empty Trie */
+    @Test
+    public void serializeTest1() throws Exception {
+        ByteArrayOutputStream fos = new ByteArrayOutputStream();
+        new Trie().serialize(fos);
+        //FileOutputStream fis = new FileOutputStream(new File("src/test/resources/serializetest1"));
+        //fis.write(fos.toByteArray());
+
+        FileInputStream fis = new FileInputStream(new File("src/test/resources/serializetest1"));
+        byte[] expectedArray = new byte[300];
+        fis.read(expectedArray);
+        assertArrayEquals( expectedArray, fos.toByteArray());
+    }
+
+    /** Testing serialize using right bytes from file on big Trie */
+    @Test
+    public void serializeTest2() throws Exception {
+        Trie trie = new Trie();
+        trie.add("cats");
+        trie.add("dogs");
+        trie.add("hate java");
+        trie.add("rococo");
+
+        ByteArrayOutputStream fos = new ByteArrayOutputStream();
+        trie.serialize(fos);
+
+        FileInputStream fis = new FileInputStream(new File("src/test/resources/serializetest2"));
+        byte[] expectedArray = new byte[1412];
+        fis.read(expectedArray);
+        assertArrayEquals( expectedArray, fos.toByteArray());
+    }
+
     /** Testing on empty Trie */
     @Test
     public void serializeDeserializeTest1() throws Exception {
