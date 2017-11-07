@@ -7,6 +7,11 @@ import ru.spbau.karlina.task1.list.List;
  * Rebuild when count of storing pairs became more than 2 * hashTableMax
  */
 public class HashTable {
+    private int hashTableMax = 4;
+    private List[] table = new List[hashTableMax];
+    private int sizeOfPairs;
+    private SimpleHash hash = new SimpleHash(hashTableMax);
+
     public HashTable() {
         makeInitialization(table, hashTableMax);
     }
@@ -87,11 +92,6 @@ public class HashTable {
         }
         table = newTable;
     }
-
-    private int hashTableMax = 4;
-    private List[] table = new List[hashTableMax];
-    private int sizeOfPairs;
-    private SimpleHash hash = new SimpleHash(hashTableMax);
 
     private static void makeInitialization(List[] array, int arraySize) {
         for (int i = 0; i < arraySize; ++i) {
