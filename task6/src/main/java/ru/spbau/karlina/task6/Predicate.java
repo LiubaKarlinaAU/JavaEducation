@@ -2,7 +2,8 @@ package ru.spbau.karlina.task6;
 
 import org.jetbrains.annotations.NotNull;
 
-interface Predicate<T> extends Function1<T,Boolean> {
+/** Interface represents a predicate structure like function from T to Boolean */
+public interface Predicate<T> extends Function1<T,Boolean> {
     /** This method generate predicate that is constant true
      * @return Predicate<T> always true predicate */
     default Predicate<T> ALWAYS_TRUE() {

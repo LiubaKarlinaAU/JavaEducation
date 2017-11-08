@@ -2,6 +2,8 @@ package ru.spbau.karlina.task6;
 
 import org.jetbrains.annotations.NotNull;
 
+/** Interface represents a two arguments function
+ *  Realisation includes templates */
 public interface Function2<T1,T2,R>  {
     /** Apply function method
      * @param T1 t1 - first function argument
