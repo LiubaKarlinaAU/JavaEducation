@@ -1,6 +1,6 @@
 package ru.spbau.karlina.task6;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 public interface Function2<T1,T2,R>  {
     /** Apply function method

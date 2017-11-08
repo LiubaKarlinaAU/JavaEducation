@@ -1,6 +1,6 @@
 package ru.spbau.karlina.task6;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 /** Interface for one argument function */
 public interface Function1<T, R> {
