@@ -11,16 +11,10 @@ public class MaybeTest {
         assertEquals("Abr", maybe.get());
     }
 
-    @Test
+    @Test(expected = ValueNotFoundException.class)
     public void nothingAndGetStringTest() throws Exception {
         Maybe<String> maybe = Maybe.nothing();
-        boolean flag = false;
-        try {
-            maybe.get();
-        } catch (MaybeException exception) {
-            flag = true;
-        }
-        assertEquals(true, flag);
+        maybe.get();
     }
 
     @Test
@@ -42,16 +36,10 @@ public class MaybeTest {
         assertEquals(new Integer(30), maybe.get());
     }
 
-    @Test
+    @Test(expected = ValueNotFoundException.class)
     public void nothingAndGetIntegerTest() throws Exception {
         Maybe<Integer> maybe = Maybe.nothing();
-        boolean flag = false;
-        try {
-            maybe.get();
-        } catch (MaybeException exception) {
-            flag = true;
-        }
-        assertEquals(true, flag);
+        maybe.get();
     }
 
     @Test

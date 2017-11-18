@@ -1,33 +1,36 @@
 package ru.spbau.karlina.task5_maybe;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 
 /**
  * Maybe pattern realization
  */
-@SuppressWarnings("WeakerAccess")
 public class Maybe<T> {
+
+    private T data = null;
     /**
      * Set value
      */
-    public static <T> Maybe<T> just(T t) {
+    public static @NotNull <T> Maybe<T> just(@NotNull T t) {
         return new Maybe<>(t);
     }
 
     /**
      * Made Maybe object with null inside
      */
-    public static <T> Maybe<T> nothing() {
+    public static @NotNull <T> Maybe<T> nothing() {
         return new Maybe<>(null);
     }
 
     /**
-     * Give object or throw MaybeException if object was null
-     * @throws MaybeException if storing data is null
+     * Give object or throw ValueNotFoundException if object was null
+     * @throws ValueNotFoundException if storing data is null
      */
-    public T get() throws MaybeException {
+    public @NotNull T get() throws ValueNotFoundException {
         if (data == null) {
-            throw new MaybeException("Nothing to get in Maybe object.");
+            throw new ValueNotFoundException("Nothing to get in Maybe object.");
         }
 
         return data;
@@ -38,7 +41,7 @@ public class Maybe<T> {
      *
      * @return false if data is null and true otherwise
      */
-    public boolean isPresent() {
+    public @NotNull boolean isPresent() {
         return data != null;
     }
 
@@ -47,15 +50,13 @@ public class Maybe<T> {
      *
      * @return Maybe(null) if null was inside before or Maybe(result of function) otherwise
      */
-    public <U> Maybe<U> map(Function<T, U> mapper) {
+    public @NotNull <U> Maybe<U> map(@NotNull Function<T, U> mapper) {
         if (isPresent()) {
             return new Maybe<>(mapper.apply(data));
         }
 
-        return new Maybe<>(null);
+        return nothing();
     }
-
-    private T data = null;
 
     private Maybe(T t) {
         data = t;

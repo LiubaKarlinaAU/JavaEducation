@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * Class Main with one public method
  */
-@SuppressWarnings("WeakerAccess")
+
 public class Main {
     /**
      * Receive two filenames (first and second)
@@ -33,14 +33,15 @@ public class Main {
                     scanner.next();
                     maybe = Maybe.nothing();
                 }
+
                 if (maybe.isPresent()) {
-                    fileWriter.write(((Integer) (maybe.get() * maybe.get())).toString() + '\n');
+                    fileWriter.write(maybe.map(x -> x * x).get().toString() + '\n');
                 } else {
                     fileWriter.write("null\n");
                 }
             }
             fileWriter.flush();
-        } catch (MaybeException | IOException e) {
+        } catch (ValueNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
