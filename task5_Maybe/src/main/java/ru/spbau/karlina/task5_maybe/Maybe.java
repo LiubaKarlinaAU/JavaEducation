@@ -10,15 +10,21 @@ import java.util.function.Function;
 public class Maybe<T> {
 
     private T data = null;
+
     /**
-     * Set value
+     * Set value method
+     *
+     * @param @NotNull T t - value to be set
+     * @return Maybe<T> Instance with input value inside
      */
     public static @NotNull <T> Maybe<T> just(@NotNull T t) {
         return new Maybe<>(t);
     }
 
     /**
-     * Made Maybe object with null inside
+     * Set null method
+     *
+     * @return Maybe<T> Instance with null inside
      */
     public static @NotNull <T> Maybe<T> nothing() {
         return new Maybe<>(null);
@@ -26,7 +32,9 @@ public class Maybe<T> {
 
     /**
      * Give object or throw ValueNotFoundException if object was null
-     * @throws ValueNotFoundException if storing data is null
+     *
+     * @return stored value
+     * @throws ValueNotFoundException if stored data is null
      */
     public @NotNull T get() throws ValueNotFoundException {
         if (data == null) {
@@ -37,18 +45,19 @@ public class Maybe<T> {
     }
 
     /**
-     * Give information about object inside
+     * Give information about stored value inside
      *
      * @return false if data is null and true otherwise
      */
-    public @NotNull boolean isPresent() {
+    public boolean isPresent() {
         return data != null;
     }
 
     /**
      * Applies a function to data object
      *
-     * @return Maybe(null) if null was inside before or Maybe(result of function) otherwise
+     * @param @NotNull Function<T, U> mapper - for mapping
+     * @return Maybe(null) if null was stored inside before or Maybe(result of function) otherwise
      */
     public @NotNull <U> Maybe<U> map(@NotNull Function<T, U> mapper) {
         if (isPresent()) {
