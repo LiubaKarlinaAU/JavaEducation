@@ -20,8 +20,8 @@ public class Collections {
     public static <R, T> ArrayList<R> map(@NotNull Function1<? super T, ? extends R> func, @NotNull Iterable<T> a) {
         ArrayList<R> resultList = new ArrayList<>();
 
-        for (Iterator<T> iter = a.iterator(); iter.hasNext(); ) {
-            resultList.add(func.apply(iter.next()));
+        for (T value : a) {
+            resultList.add(func.apply(value));
         }
 
         return resultList;
@@ -81,19 +81,7 @@ public class Collections {
      * @return ArrayList<T> list with result
      */
     public static <T> ArrayList<T> takeUnless(@NotNull Predicate<? super T> pred, @NotNull Iterable<T> a) {
-        ArrayList<T> resultList = new ArrayList<>();
-
-        for (Iterator<T> iter = a.iterator(); iter.hasNext(); ) {
-            T tmp = iter.next();
-
-            if (pred.apply(tmp)) {
-                return resultList;
-            }
-
-            resultList.add(tmp);
-        }
-
-        return resultList;
+        return takeWhile(pred.not(), a);
     }
 
     /**

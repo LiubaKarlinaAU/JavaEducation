@@ -52,6 +52,6 @@ public interface Function2<T1, T2, R> {
      * @return curried function.
      */
     default @NotNull Function1<T1, Function1<T2, R>> curry() {
-        return first -> (second -> apply(first, second));
+        return first -> bind1(first);
     }
 }
