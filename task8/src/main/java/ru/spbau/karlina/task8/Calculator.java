@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import static java.lang.Character.isDigit;
 
 public class Calculator {
-    private Stack<Character> operators;
-    private Stack<Double> digits;
+    final private Stack<Character> operators;
+    final private Stack<Double> digits;
 
     /**
      * Constructor make stacks initialization

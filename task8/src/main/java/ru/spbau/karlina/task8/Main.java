@@ -18,7 +18,7 @@ public class Main {
             return;
         }
 
-        Calculator calculator = new Calculator(new Stack(), new Stack());
+        Calculator calculator = new Calculator(new Stack<Character>(), new Stack<Double>());
         String expression = args[0];
 
         String notation = calculator.makeReversePolishNotation(expression);

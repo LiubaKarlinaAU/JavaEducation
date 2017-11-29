@@ -10,7 +10,7 @@ import java.util.EmptyStackException;
  * @param <T> type of stored elements
  */
 public class Stack<T> {
-    private Node<T> head = null;
+    private Node head = null;
 
     /**
      * Method checks existing the stack elements
@@ -58,8 +58,7 @@ public class Stack<T> {
      * @return inserted element
      */
     public T push(@NotNull T element) {
-        Node top = new Node(element, head);
-        head = top;
+        head = new Node(element, head);
 
         return element;
     }
@@ -67,11 +66,11 @@ public class Stack<T> {
     /**
      * Inner class for Stack realisation
      */
-    private class Node<T> {
-        private T data;
-        private Node<T> prev = null;
+    private class Node {
+        final private T data;
+        private Node prev = null;
 
-        public Node(@NotNull T element, Node prev) {
+        private Node(@NotNull T element, Node prev) {
             data = element;
             this.prev = prev;
         }
