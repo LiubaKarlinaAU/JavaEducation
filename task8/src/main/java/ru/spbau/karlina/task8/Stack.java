@@ -13,7 +13,7 @@ public class Stack<T> {
     private Node<T> head = null;
 
     /**
-     * Method checkes existing the stack elements
+     * Method checks existing the stack elements
      *
      * @return true if there isn't any elements and false otherwise
      */
@@ -71,7 +71,7 @@ public class Stack<T> {
         private T data;
         private Node<T> prev = null;
 
-        public Node(T element, Node prev) {
+        public Node(@NotNull T element, Node prev) {
             data = element;
             this.prev = prev;
         }
