@@ -14,7 +14,8 @@ import java.util.stream.Stream;
 
 public final class SecondPartTasks {
 
-    private SecondPartTasks() {}
+    private SecondPartTasks() {
+    }
 
     // Найти строки из переданных файлов, в которых встречается указанная подстрока.
     public static List<String> findQuotes(@NotNull List<String> paths, CharSequence sequence) {
@@ -31,7 +32,7 @@ public final class SecondPartTasks {
     // Стрелок атакует мишень и каждый раз попадает в произвольную точку квадрата.
     // Надо промоделировать этот процесс с помощью класса java.util.Random и посчитать, какова вероятность попасть в мишень.
     public static double piDividedBy4() {
-        int streamLength = (int)1e5;
+        int streamLength = (int) 1e5;
         Random random = new Random();
 
         return Stream.generate(
@@ -41,7 +42,7 @@ public final class SecondPartTasks {
                     return Double.compare(x * x + y * y, 1) <= 0;
                 })
                 .limit(streamLength)
-                .mapToInt(x->x? 1 : 0)
+                .mapToInt(x -> x ? 1 : 0)
                 .average().orElse(0);
     }
 
@@ -49,16 +50,16 @@ public final class SecondPartTasks {
     // Надо вычислить, чья общая длина произведений наибольшая.
     public static String findPrinter(@NotNull Map<String, List<String>> compositions) {
         return compositions.entrySet().stream().sorted(
-                Comparator.comparing(entry -> entry.getValue().stream()
-                          .collect(Collectors.joining()).length())).findFirst().get().getKey();
+                Comparator.comparing(entry -> -entry.getValue().stream()
+                        .collect(Collectors.joining()).length())).findFirst().get().getKey();
     }
 
     // Вы крупный поставщик продуктов. Каждая торговая сеть делает вам заказ в виде Map<Товар, Количество>.
     // Необходимо вычислить, какой товар и в каком количестве надо поставить.
     public static Map<String, Integer> calculateGlobalOrder(@NotNull List<Map<String, Integer>> orders) {
         return orders.stream().flatMap(m -> m.entrySet().stream())
-                     .collect(Collectors.groupingBy(Map.Entry::getKey,
-                              Collectors.mapping(Map.Entry::getValue,
-                                       Collectors.summingInt(Integer::intValue))));
+                .collect(Collectors.groupingBy(Map.Entry::getKey,
+                        Collectors.mapping(Map.Entry::getValue,
+                                Collectors.summingInt(Integer::intValue))));
     }
 }

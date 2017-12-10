@@ -1,16 +1,12 @@
 package ru.spbau.karlina.task9.sp;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static ru.spbau.karlina.task9.sp.SecondPartTasks.findQuotes;
-import static ru.spbau.karlina.task9.sp.SecondPartTasks.piDividedBy4;
+import static ru.spbau.karlina.task9.sp.SecondPartTasks.*;
 
 public class SecondPartTasksTest {
 
@@ -22,7 +18,7 @@ public class SecondPartTasksTest {
             fileNames.add("src/test/resources/temp" + i);
 
         String[] expected = {"He'll sit one day, the lights are down", "And when they let you down"};
-        assertArrayEquals( expected, findQuotes(fileNames, "down").toArray());
+        assertArrayEquals(expected, findQuotes(fileNames, "down").toArray());
 
     }
 
@@ -33,11 +29,37 @@ public class SecondPartTasksTest {
 
     @Test
     public void testFindPrinter() {
-        fail();
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("first", Arrays.asList("small", "text")); // 9
+        map.put("second", Arrays.asList("some", "text", "!!!!")); // 12
+        map.put("king", Arrays.asList("big", "big", "big", "text")); // 13
+
+        assertEquals("king", findPrinter(map));
     }
 
     @Test
     public void testCalculateGlobalOrder() {
-        fail();
+        Map<String, Integer> map1 = new HashMap<>();
+        map1.put("potato", 3);
+        map1.put("tomato", 1);
+        map1.put("apple", 4);
+
+        Map<String, Integer> map2 = new HashMap<>();
+        map2.put("tomato", 0);
+        map2.put("apple", 1);
+
+        Map<String, Integer> map3 = new HashMap<>();
+        map3.put("orange", 78);
+        map3.put("tomato", 3);
+        map3.put("apple", 1);
+
+        Map<String, Integer> expected = new HashMap<>();
+        expected.put("orange", 78);
+        expected.put("tomato", 4);
+        expected.put("apple", 6);
+        expected.put("potato", 3);
+
+        assertArrayEquals(expected.entrySet().toArray(),
+                calculateGlobalOrder(Arrays.asList(map1, map2, map3)).entrySet().toArray());
     }
 }
