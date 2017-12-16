@@ -11,8 +11,8 @@ public class Calculator {
     /**
      * Constructor make stacks initialization
      *
-     * @param @NotNull Stack<Character> operators stack for storing operators
-     * @param @NotNull Stack<Character> digits stack for storing variables
+     * @param operators stack for storing operators
+     * @param digits stack for storing variables
      */
     public Calculator(@NotNull Stack<Character> operators, @NotNull Stack<Double> digits) {
         this.operators = operators;
@@ -22,8 +22,8 @@ public class Calculator {
     /**
      * Make reverse polish notation of input expression
      *
-     * @param @NotNull String expression expression to be make reverse polish notation
-     * @return @NotNull String result notation
+     * @param expression expression to be make reverse polish notation
+     * @return result notation
      */
     public @NotNull String makeReversePolishNotation(@NotNull String expression) {
         StringBuilder notation = new StringBuilder("");
@@ -60,7 +60,7 @@ public class Calculator {
     /**
      * Calculate given reverse polish notation
      *
-     * @param @NotNull String notation expression to be calculate
+     * @param notation expression to be calculate
      * @return notation result
      */
     public double calculateNotation(@NotNull String notation) {

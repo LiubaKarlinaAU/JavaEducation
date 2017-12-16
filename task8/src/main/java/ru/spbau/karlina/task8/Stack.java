@@ -54,7 +54,7 @@ public class Stack<T> {
     /**
      * Insert element to the stack top
      *
-     * @param @NotNull T element - to be insert
+     * @param element - to be insert
      * @return inserted element
      */
     public T push(@NotNull T element) {

@@ -10,7 +10,7 @@ public class Main {
      * Calculates given in command line expression and writes expression result on screen.
      * Calculating uses reverse polish notation in Calculator class
      *
-     * @param @NotNull String[] args should contain one string expression
+     * @param args should contain one string expression
      */
     public static void main(@NotNull String[] args) {
         if (args.length == 0) {
