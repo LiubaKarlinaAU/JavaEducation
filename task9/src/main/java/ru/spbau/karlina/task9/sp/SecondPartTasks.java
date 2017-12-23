@@ -49,9 +49,9 @@ public final class SecondPartTasks {
     // Дано отображение из имени автора в список с содержанием его произведений.
     // Надо вычислить, чья общая длина произведений наибольшая.
     public static String findPrinter(@NotNull Map<String, List<String>> compositions) {
-        return compositions.entrySet().stream().sorted(
+        return compositions.entrySet().stream().min(
                 Comparator.comparing(entry -> -entry.getValue().stream()
-                        .collect(Collectors.joining()).length())).findFirst().get().getKey();
+                        .collect(Collectors.joining()).length())).get().getKey();
     }
 
     // Вы крупный поставщик продуктов. Каждая торговая сеть делает вам заказ в виде Map<Товар, Количество>.

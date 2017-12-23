@@ -93,7 +93,7 @@ public final class FirstPartTasks {
      */
     public static long countAlbumDuplicates(@NotNull Stream<Album> albums) {
         return albums.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet().stream().map(entry -> entry.getValue() - 1).collect(Collectors.summingLong(Long::intValue));
+                .entrySet().stream().mapToLong(entry -> entry.getValue() - 1).sum();
     }
 
     /**
@@ -105,7 +105,7 @@ public final class FirstPartTasks {
      * @throws UnsupportedOperationException()
      */
     public static Optional<Album> minMaxRating(@NotNull Stream<Album> albums) {
-        return albums.sorted(Comparator.comparing(a -> a.getTracks().stream().mapToDouble(Track::getRating).max().orElse(0))).findFirst();
+        return albums.min(Comparator.comparing(a -> a.getTracks().stream().mapToDouble(Track::getRating).max().orElse(0)));
     }
 
     /**
