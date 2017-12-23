@@ -1,9 +1,8 @@
 package ru.spbau.karlina.task10;
 
 import org.junit.Test;
-import ru.spbau.karlina.task10.resources.testClasses.ClassWithTwoConstructors;
+import ru.spbau.karlina.task10.resources.testClasses.*;
 import ru.spbau.karlina.task10.resources.testClasses.Example;
-import ru.spbau.karlina.task10.resources.testClasses.GenericClass;
 
 import java.io.*;
 import java.util.Scanner;
@@ -16,7 +15,7 @@ public class ReflectorTest {
      * Test on empty class
      */
     @Test
-    public void test() throws IOException, NoSuchMethodException {
+    public void test1PrintStructure() throws IOException, NoSuchMethodException {
         new Reflector().printStructure(Example.class);
         // assertEquals(true, isEqualExceptPackage("src/main/java/ru/spbau/karlina/task10/Example.java",
         //        "src/test/java/ru/spbau/karlina/task10/resources/testClasses/Example.java"));
@@ -26,7 +25,7 @@ public class ReflectorTest {
      * Test on class with two constructors
      */
     @Test
-    public void test1() throws IOException, NoSuchMethodException {
+    public void test2PrintStructure() throws IOException, NoSuchMethodException {
         new Reflector().printStructure(ClassWithTwoConstructors.class);
         // assertEquals(true, isEqual());
     }
@@ -35,9 +34,33 @@ public class ReflectorTest {
      * Test on generic class with two constructors
      */
     @Test
-    public void test3() throws IOException, NoSuchMethodException {
+    public void test3PrintStructure() throws IOException, NoSuchMethodException {
         new Reflector().printStructure(GenericClass.class);
         // assertEquals(true, isEqual());
+    }
+
+    /**
+     * Test on two equal classes
+     */
+    @Test
+    public void test1DiffClasses() throws IOException, NoSuchMethodException {
+        assertEquals(false, new Reflector().diffClasses(Integer.class, Integer.class, System.out));
+    }
+
+    /**
+     * Test on two different classes
+     */
+    @Test
+    public void test2DiffClasses() throws IOException, NoSuchMethodException {
+        assertEquals(true, new Reflector().diffClasses(Integer.class, Long.class, System.out));
+    }
+
+    /**
+     * Test on classes with one different method
+     */
+    @Test
+    public void test3DiffClasses() throws IOException, NoSuchMethodException {
+        assertEquals(true, new Reflector().diffClasses(ClassA.class, ClassAWithMethod.class, System.out));
     }
 
     private boolean isEqualExceptPackage(String firstFileName, String secondFileName) throws FileNotFoundException, IOException {

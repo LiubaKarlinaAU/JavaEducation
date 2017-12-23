@@ -8,10 +8,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 
 public class Reflector {
@@ -29,6 +31,39 @@ public class Reflector {
         printImports(someClass, fileLines);
         printClass(someClass, fileLines);
         writeToFile("src/main/java/ru/spbau/karlina/task10/" + someClass.getSimpleName() + ".java", fileLines);
+    }
+
+    /**
+     * Print difference of two classes on screen.
+     *
+     * @param firstClass  first class to compare
+     * @param secondClass secondClass to compare
+     * @param writer stream write to
+     * @return true if classes are different and false otherwise
+     */
+    public boolean diffClasses(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass, @NotNull PrintStream writer) {
+        return  printDifferentFields(firstClass, secondClass, writer) |
+                printDifferentFields(secondClass, firstClass, writer) |
+                printDifferentMethods(firstClass, secondClass, writer)|
+                printDifferentMethods(secondClass, firstClass, writer);
+    }
+
+    private boolean printDifferentMethods(@NotNull Class<?> first, @NotNull Class<?> second, @NotNull PrintStream writer) {
+        @NotNull Set<String> classMethods = Arrays.stream(first.getDeclaredMethods())
+                .map(Method::toGenericString).collect(Collectors.toCollection(HashSet::new));
+
+        return Arrays.stream(second.getDeclaredMethods())
+                .map(Method::toGenericString).filter(s -> !classMethods.contains(s))
+                .peek(s -> System.out.println(s)).count() > 0;
+    }
+
+    private boolean printDifferentFields(@NotNull Class<?> first, @NotNull Class<?> second, @NotNull PrintStream writer) {
+        @NotNull Set<String> classFields = Arrays.stream(first.getDeclaredFields())
+                .map(Field::toGenericString).collect(Collectors.toCollection(HashSet::new));
+
+        return Arrays.stream(second.getDeclaredFields())
+                .map(Field::toGenericString).filter(s -> !classFields.contains(s))
+                .peek(s -> System.out.println(s)).count() > 0;
     }
 
     private void writeToFile(@NotNull String fileName, @NotNull StringBuilder fileLines) throws IOException {
