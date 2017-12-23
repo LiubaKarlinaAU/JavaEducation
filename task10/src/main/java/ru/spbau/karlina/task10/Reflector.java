@@ -22,7 +22,6 @@ public class Reflector {
      * @param someClass class to make reflection
      * @throws IOException if failed to create file
      */
-    @NotNull
     public void printStructure(@NotNull Class<?> someClass) throws IOException, NoSuchMethodException {
         @NotNull StringBuilder fileLines = new StringBuilder();
 
