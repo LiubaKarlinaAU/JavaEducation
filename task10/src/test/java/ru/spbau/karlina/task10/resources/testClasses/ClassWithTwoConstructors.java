@@ -6,7 +6,6 @@ public class ClassWithTwoConstructors {
     public ClassWithTwoConstructors() {
     }
 
-    private ClassWithTwoConstructors(int arg) {
-        i = arg;
+    private ClassWithTwoConstructors(int arg0) {
     }
 }

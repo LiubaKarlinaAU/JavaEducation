@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,13 +37,13 @@ public class Reflector {
      *
      * @param firstClass  first class to compare
      * @param secondClass secondClass to compare
-     * @param writer stream write to
+     * @param writer      stream write to
      * @return true if classes are different and false otherwise
      */
     public boolean diffClasses(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass, @NotNull PrintStream writer) {
-        return  printDifferentFields(firstClass, secondClass, writer) |
+        return printDifferentFields(firstClass, secondClass, writer) |
                 printDifferentFields(secondClass, firstClass, writer) |
-                printDifferentMethods(firstClass, secondClass, writer)|
+                printDifferentMethods(firstClass, secondClass, writer) |
                 printDifferentMethods(secondClass, firstClass, writer);
     }
 
@@ -163,12 +164,12 @@ public class Reflector {
 
     private void printClassFields(@NotNull Field[] declaredFields, @NotNull StringBuilder fileLines) {
         for (Field field : declaredFields) {
-           fileLines.append(Modifier.toString(field.getModifiers()))
-                   .append(" " + getGenericFieldType(field))
-                   .append(" " + field.getName());
+            fileLines.append(Modifier.toString(field.getModifiers()))
+                    .append(" " + getGenericFieldType(field))
+                    .append(" " + field.getName());
 
-           if (Modifier.isFinal(field.getModifiers())) {
-              fileLines.append(" = " + getDefaultValue(field.getType()));
+            if (Modifier.isFinal(field.getModifiers())) {
+                fileLines.append(" = " + getDefaultValue(field.getType()));
             }
 
             fileLines.append(";\n");
@@ -197,16 +198,27 @@ public class Reflector {
     private void printClassHeader(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
         fileLines.append(Modifier.toString(someClass.getModifiers())).append(" ")
                 .append(someClass.isInterface() ? "" : "class ")
-                .append(someClass.getSimpleName());
+                .append(someClass.getSimpleName())
+                .append(getClassGenericSignature(someClass));
 
         addExtendedAndImplemented(someClass, fileLines);
         fileLines.append(" {\n");
 
     }
 
+
+    private static String getClassGenericSignature(@NotNull Class<?> someClass) {
+        TypeVariable<? extends Class<?>>[] typeParameters = someClass.getTypeParameters();
+        return (typeParameters.length > 0 ?
+                Arrays.stream(typeParameters)
+                        .map(TypeVariable::getName)
+                        .collect(Collectors.joining(", ", "<", ">")) :
+                "");
+    }
+
     private void addExtendedAndImplemented(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
         Class<?> superClass = someClass.getSuperclass();
-        if (superClass != null) {
+        if (superClass != null && superClass != Object.class) {
             fileLines.append(" extends " + superClass.getSimpleName());
         }
 
@@ -279,11 +291,10 @@ public class Reflector {
     }
 
     private static void addTypeToImports(@NotNull Set<String> imports, @NotNull Class<?> type) {
-        if (!type.isPrimitive()) {
+        if (!type.isPrimitive() && type != Object.class) {
             if (type.isArray()) {
                 addTypeToImports(imports, type.getComponentType());
-            }
-            else {
+            } else {
                 imports.add(type.getCanonicalName());
             }
         }

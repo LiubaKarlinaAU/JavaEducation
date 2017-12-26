@@ -4,11 +4,13 @@ public class ClassAWithMethod {
     private int i;
     private int j;
 
+    public ClassAWithMethod() {
+    }
     public int getI() {
-        return i;
+        return 0;
     }
 
     public int getJ() {
-        return i;
+        return 0;
     }
 }

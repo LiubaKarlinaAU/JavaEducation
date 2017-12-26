@@ -2,7 +2,6 @@ package ru.spbau.karlina.task10;
 
 import org.junit.Test;
 import ru.spbau.karlina.task10.resources.testClasses.*;
-import ru.spbau.karlina.task10.resources.testClasses.Example;
 
 import java.io.*;
 import java.util.Scanner;
@@ -16,10 +15,9 @@ public class ReflectorTest {
      */
     @Test
     public void test1PrintStructure() throws IOException, NoSuchMethodException {
-        new Reflector().printStructure(Integer.class);
-        //new Reflector().printStructure(Example.class);
-        // assertEquals(true, isEqualExceptPackage("src/main/java/ru/spbau/karlina/task10/Example.java",
-        //        "src/test/java/ru/spbau/karlina/task10/resources/testClasses/Example.java"));
+        new Reflector().printStructure(Example.class);
+        assertEquals(true, isEqualExceptPackage("src/main/java/ru/spbau/karlina/task10/Example.java",
+                "src/test/java/ru/spbau/karlina/task10/resources/testClasses/Example.java"));
     }
 
     /**
@@ -28,7 +26,8 @@ public class ReflectorTest {
     @Test
     public void test2PrintStructure() throws IOException, NoSuchMethodException {
         new Reflector().printStructure(ClassWithTwoConstructors.class);
-        // assertEquals(true, isEqual());
+        assertEquals(true, isEqualExceptPackage("src/main/java/ru/spbau/karlina/task10/ClassWithTwoConstructors.java",
+                "src/test/java/ru/spbau/karlina/task10/resources/testClasses/ClassWithTwoConstructors.java"));
     }
 
     /**
@@ -37,8 +36,20 @@ public class ReflectorTest {
     @Test
     public void test3PrintStructure() throws IOException, NoSuchMethodException {
         new Reflector().printStructure(GenericClass.class);
-        // assertEquals(true, isEqual());
+        assertEquals(true, isEqualExceptPackage("src/main/java/ru/spbau/karlina/task10/GenericClass.java",
+                "src/test/java/ru/spbau/karlina/task10/resources/testClasses/GenericClass.java"));
     }
+
+    /**
+     * Test on generic class contains method with not void return value
+     */
+    @Test
+    public void test4PrintStructure() throws IOException, NoSuchMethodException {
+        new Reflector().printStructure(ClassAWithMethod.class);
+        assertEquals(true, isEqualExceptPackage("src/main/java/ru/spbau/karlina/task10/ClassAWithMethod.java",
+                "src/test/java/ru/spbau/karlina/task10/resources/testClasses/ClassAWithMethod.java"));
+    }
+
 
     /**
      * Test on two equal classes
@@ -75,9 +86,29 @@ public class ReflectorTest {
         first.nextLine();
         second.nextLine();
 
+        String fromFirst = "", fromSecond = "";
         while (first.hasNext() && second.hasNext()) {
-            if (!first.nextLine().toString().equals(second.nextLine().toString())) {
-                return false;
+            while (first.hasNext()) {
+                fromFirst = first.nextLine().replace(" ", "");
+                if (fromFirst.length() != 0) {
+                    break;
+                }
+            }
+
+            while (second.hasNext()) {
+                fromSecond = second.nextLine().replace(" ", "");
+                if (fromSecond.length() != 0) {
+                    break;
+                }
+            }
+            if (fromFirst.length() != 0) {
+                if (fromSecond.length() != 0) {
+                    if (!fromFirst.equals(fromSecond)) {
+                        return false;
+                    }
+                } else if (fromSecond.length() != 0) {
+                    return false;
+                }
             }
         }
 
