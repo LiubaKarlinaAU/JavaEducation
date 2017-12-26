@@ -8,12 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 
 public class Reflector {
@@ -99,7 +97,7 @@ public class Reflector {
                     .append(method.getReturnType().getSimpleName().toString() + " ")
                     .append(method.getName())
                     .append(makeParametrList(method));
-            System.out.println(method.getName());
+            //System.out.println(method.getName());
             if (!Modifier.isNative(modifiers) && !Modifier.isAbstract(modifiers)) {
                 fileLines.append(" {\n").append(getBody(method)).append("\n}");
             } else {
@@ -163,8 +161,37 @@ public class Reflector {
                 .toString();
     }
 
-    private void printClassFields(Field[] declaredFields, @NotNull StringBuilder fileLines) {
-        Arrays.stream(declaredFields).map(f -> Modifier.toString(f.getModifiers()) + " " + f.getGenericType() + " " + f.getName() + ";\n").forEach(fileLines::append);
+    private void printClassFields(@NotNull Field[] declaredFields, @NotNull StringBuilder fileLines) {
+        for (Field field : declaredFields) {
+           fileLines.append(Modifier.toString(field.getModifiers()))
+                   .append(" " + getGenericFieldType(field))
+                   .append(" " + field.getName());
+
+           if (Modifier.isFinal(field.getModifiers())) {
+              fileLines.append(" = " + getDefaultValue(field.getType()));
+            }
+
+            fileLines.append(";\n");
+        }
+    }
+
+    @NotNull
+    private String getGenericFieldType(@NotNull Field field) {
+        //System.out.println(field.getType().getTypeName());
+        return field.getGenericType().getTypeName();
+    }
+
+    @NotNull
+    private static String getDefaultValue(@NotNull Class<?> type) {
+        if (!type.isPrimitive()) {
+            return "null";
+        }
+
+        if (type == boolean.class) {
+            return "false";
+        }
+
+        return "0";
     }
 
     private void printClassHeader(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
@@ -184,7 +211,6 @@ public class Reflector {
         }
 
         if (someClass.getInterfaces().length != 0 || someClass.getGenericInterfaces().length != 0) {
-            fileLines.append(superClass == null ? "" : ",");
             fileLines.append(Arrays.stream(someClass.getInterfaces())
                     .map(in -> " " + in.getSimpleName()).collect(Collectors.joining(",", " implements", "")));
         }
@@ -197,19 +223,42 @@ public class Reflector {
     private void printImports(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) throws NoSuchMethodException {
         @NotNull Set<String> imports = new HashSet<>();
 
-        addFieldsImports(imports, someClass.getDeclaredFields());
-        addConstructorsImports(imports, someClass.getConstructors());
-        addMethodImports(imports, someClass);
+        collectImports(someClass, imports);
 
         fileLines.append("\n");
         imports.stream().map(s -> "import " + s + ";\n").forEach(fileLines::append);
     }
 
-    private void addFieldsImports(@NotNull Set<String> imports, @NotNull Field[] declaredFields) {
+    private static void collectImports(@NotNull Class<?> someClass, @NotNull Set<String> imports) {
+        addFieldsImports(imports, someClass.getDeclaredFields());
+        addConstructorsImports(imports, someClass.getConstructors());
+        addMethodImports(imports, someClass);
+
+        addInheritedImports(imports, someClass);
+        addInnerImports(imports, someClass.getDeclaredClasses());
+    }
+
+    private static void addInheritedImports(@NotNull Set<String> imports, @NotNull Class someClass) {
+        if (someClass.getSuperclass() != null) {
+            addTypeToImports(imports, someClass.getSuperclass());
+        }
+
+        for (@NotNull Class<?> superclass : someClass.getInterfaces()) {
+            addTypeToImports(imports, superclass);
+        }
+    }
+
+    private static void addInnerImports(@NotNull Set imports, @NotNull Class[] classes) {
+        for (@NotNull Class<?> inner : classes) {
+            collectImports(inner, imports);
+        }
+    }
+
+    private static void addFieldsImports(@NotNull Set<String> imports, @NotNull Field[] declaredFields) {
         Arrays.stream(declaredFields).forEach(f -> addTypeToImports(imports, f.getType()));
     }
 
-    private void addConstructorsImports(@NotNull Set<String> imports, @NotNull Constructor<?>[] constructors) {
+    private static void addConstructorsImports(@NotNull Set<String> imports, @NotNull Constructor<?>[] constructors) {
         for (@NotNull Constructor<?> cons : constructors) {
             for (@NotNull Class<?> type : cons.getParameterTypes()) {
                 addTypeToImports(imports, type);
@@ -217,7 +266,7 @@ public class Reflector {
         }
     }
 
-    private void addMethodImports(@NotNull Set<String> imports, @NotNull Class<?> someClass) {
+    private static void addMethodImports(@NotNull Set<String> imports, @NotNull Class<?> someClass) {
         for (@NotNull Method method : someClass.getDeclaredMethods()) {
             for (@NotNull Class<?> type : method.getParameterTypes()) {
                 addTypeToImports(imports, type);
@@ -231,7 +280,12 @@ public class Reflector {
 
     private static void addTypeToImports(@NotNull Set<String> imports, @NotNull Class<?> type) {
         if (!type.isPrimitive()) {
-            imports.add(type.getCanonicalName());
+            if (type.isArray()) {
+                addTypeToImports(imports, type.getComponentType());
+            }
+            else {
+                imports.add(type.getCanonicalName());
+            }
         }
     }
 }

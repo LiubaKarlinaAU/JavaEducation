@@ -16,7 +16,8 @@ public class ReflectorTest {
      */
     @Test
     public void test1PrintStructure() throws IOException, NoSuchMethodException {
-        new Reflector().printStructure(Example.class);
+        new Reflector().printStructure(Integer.class);
+        //new Reflector().printStructure(Example.class);
         // assertEquals(true, isEqualExceptPackage("src/main/java/ru/spbau/karlina/task10/Example.java",
         //        "src/test/java/ru/spbau/karlina/task10/resources/testClasses/Example.java"));
     }
