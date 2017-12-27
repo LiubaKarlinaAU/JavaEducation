@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,18 +17,20 @@ import java.util.stream.Stream;
 public class Reflector {
 
     /**
-     * Prints structure of class to same named file.
+     * Prints structure of class to same named file that put to the given path.
      *
      * @param someClass class to make reflection
+     * @param path place for class file that method will make
+     * @param packageName package name for class that method will make
      * @throws IOException if failed to create file
      */
-    public void printStructure(@NotNull Class<?> someClass) throws IOException, NoSuchMethodException {
+    public static void printStructure(@NotNull Class<?> someClass, String path, @NotNull String packageName) throws IOException, NoSuchMethodException {
         @NotNull StringBuilder fileLines = new StringBuilder();
 
-        printPackage(someClass, fileLines);
+        printPackage(packageName, fileLines);
         printImports(someClass, fileLines);
         printClass(someClass, fileLines);
-        writeToFile("src/main/java/ru/spbau/karlina/task10/" + someClass.getSimpleName() + ".java", fileLines);
+        writeToFile(path + someClass.getSimpleName() + ".java", fileLines);
     }
 
     /**
@@ -40,32 +41,51 @@ public class Reflector {
      * @param writer      stream write to
      * @return true if classes are different and false otherwise
      */
-    public boolean diffClasses(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass, @NotNull PrintStream writer) {
+    @NotNull
+    public static boolean diffClasses(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass, @NotNull PrintStream writer) {
         return printDifferentFields(firstClass, secondClass, writer) |
                 printDifferentFields(secondClass, firstClass, writer) |
                 printDifferentMethods(firstClass, secondClass, writer) |
                 printDifferentMethods(secondClass, firstClass, writer);
     }
 
-    private boolean printDifferentMethods(@NotNull Class<?> first, @NotNull Class<?> second, @NotNull PrintStream writer) {
+    private static boolean printDifferentMethods(@NotNull Class<?> first, @NotNull Class<?> second, @NotNull PrintStream writer) {
         @NotNull Set<String> classMethods = Arrays.stream(first.getDeclaredMethods())
-                .map(Method::toGenericString).collect(Collectors.toCollection(HashSet::new));
+                .map(m ->methodToString(m)).collect(Collectors.toCollection(HashSet::new));
 
         return Arrays.stream(second.getDeclaredMethods())
-                .map(Method::toGenericString).filter(s -> !classMethods.contains(s))
-                .peek(s -> System.out.println(s)).count() > 0;
+                .map(m ->methodToString(m)).filter(s -> !classMethods.contains(s))
+                .peek(s -> writer.println(s)).count() > 0;
     }
 
-    private boolean printDifferentFields(@NotNull Class<?> first, @NotNull Class<?> second, @NotNull PrintStream writer) {
+    private static boolean printDifferentFields(@NotNull Class<?> first, @NotNull Class<?> second, @NotNull PrintStream writer) {
         @NotNull Set<String> classFields = Arrays.stream(first.getDeclaredFields())
-                .map(Field::toGenericString).collect(Collectors.toCollection(HashSet::new));
+                .map(f ->fieldToString(f)).collect(Collectors.toCollection(HashSet::new));
 
         return Arrays.stream(second.getDeclaredFields())
-                .map(Field::toGenericString).filter(s -> !classFields.contains(s))
-                .peek(s -> System.out.println(s)).count() > 0;
+                .map(f ->fieldToString(f)).filter(s -> !classFields.contains(s))
+                .peek(s -> writer.println(s)).count() > 0;
     }
 
-    private void writeToFile(@NotNull String fileName, @NotNull StringBuilder fileLines) throws IOException {
+    @NotNull
+    private static String fieldToString(@NotNull Field field) {
+        return Modifier.toString(field.getModifiers()) + " " + getGenericFieldType(field)
+                + " " + field.getName();
+    }
+
+
+    @NotNull
+    private static String methodToString(@NotNull Method method) {
+        int modifiers = method.getModifiers();
+        return modifiers == 0 ?
+                "" : Modifier.toString(modifiers) +
+                " " + makeGenericSignature(method) +
+                method.getReturnType().getSimpleName().toString() +
+                " " + method.getName() +
+                makeParametrList(method);
+    }
+
+    private static void writeToFile(@NotNull String fileName, @NotNull StringBuilder fileLines) throws IOException {
         File file = new File(fileName);
         Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 
@@ -74,7 +94,7 @@ public class Reflector {
         writer.close();
     }
 
-    private void printClass(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
+    private static void printClass(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
         fileLines.append("\n");
         printClassHeader(someClass, fileLines);
         printClassFields(someClass.getDeclaredFields(), fileLines);
@@ -89,16 +109,11 @@ public class Reflector {
         fileLines.append("}");
     }
 
-    private void printClassMethods(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
+    private static void printClassMethods(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
         for (Method method : someClass.getDeclaredMethods()) {
             int modifiers = method.getModifiers();
-            fileLines.append(modifiers == 0 ?
-                    "" : Modifier.toString(modifiers) + " ")
-                    .append(makeGenericSignature(method))
-                    .append(method.getReturnType().getSimpleName().toString() + " ")
-                    .append(method.getName())
-                    .append(makeParametrList(method));
-            //System.out.println(method.getName());
+            fileLines.append(methodToString(method));
+
             if (!Modifier.isNative(modifiers) && !Modifier.isAbstract(modifiers)) {
                 fileLines.append(" {\n").append(getBody(method)).append("\n}");
             } else {
@@ -109,14 +124,13 @@ public class Reflector {
     }
 
     @NotNull
-    private String getBody(Method method) {
-        Class<?> returnType = method.getReturnType();
+    private static String getBody(@NotNull Method method) {
+        @NotNull Class<?> returnType = method.getReturnType();
         if (returnType == void.class) {
             return "";
         }
 
-        String value = "null";
-
+        @NotNull String value = "null";
 
         if (returnType.isPrimitive()) {
             value = "0";
@@ -129,7 +143,7 @@ public class Reflector {
         return "return " + value + ";";
     }
 
-    private void printClassConstructors(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
+    private static void printClassConstructors(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
         for (Constructor constructor : someClass.getDeclaredConstructors()) {
             fileLines.append(constructor.getModifiers() == 0 ?
                     "" : Modifier.toString(constructor.getModifiers()) + " ")
@@ -141,7 +155,7 @@ public class Reflector {
     }
 
     @NotNull
-    private String makeGenericSignature(@NotNull Executable executable) {
+    private static String makeGenericSignature(@NotNull Executable executable) {
         @NotNull Pattern pattern = Pattern.compile("(<.*?>)");
         String genericString = executable.toGenericString();
         @NotNull Matcher matcher = pattern.matcher(genericString.substring(0, genericString.indexOf('(')));
@@ -149,7 +163,7 @@ public class Reflector {
     }
 
     @NotNull
-    private String makeParametrList(@NotNull Executable executable) {
+    private static String makeParametrList(@NotNull Executable executable) {
         Parameter[] parametrs = executable.getParameters();
         Type[] parametrTypes = executable.getGenericParameterTypes();
         Stream.Builder<String> builder = Stream.builder();
@@ -162,11 +176,9 @@ public class Reflector {
                 .toString();
     }
 
-    private void printClassFields(@NotNull Field[] declaredFields, @NotNull StringBuilder fileLines) {
+    private static void printClassFields(@NotNull Field[] declaredFields, @NotNull StringBuilder fileLines) {
         for (Field field : declaredFields) {
-            fileLines.append(Modifier.toString(field.getModifiers()))
-                    .append(" " + getGenericFieldType(field))
-                    .append(" " + field.getName());
+            fileLines.append(fieldToString(field));
 
             if (Modifier.isFinal(field.getModifiers())) {
                 fileLines.append(" = " + getDefaultValue(field.getType()));
@@ -177,8 +189,7 @@ public class Reflector {
     }
 
     @NotNull
-    private String getGenericFieldType(@NotNull Field field) {
-        //System.out.println(field.getType().getTypeName());
+    private static String getGenericFieldType(@NotNull Field field) {
         return field.getGenericType().getTypeName();
     }
 
@@ -195,7 +206,7 @@ public class Reflector {
         return "0";
     }
 
-    private void printClassHeader(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
+    private static void printClassHeader(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
         fileLines.append(Modifier.toString(someClass.getModifiers())).append(" ")
                 .append(someClass.isInterface() ? "" : "class ")
                 .append(someClass.getSimpleName())
@@ -216,7 +227,7 @@ public class Reflector {
                 "");
     }
 
-    private void addExtendedAndImplemented(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
+    private static void addExtendedAndImplemented(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
         Class<?> superClass = someClass.getSuperclass();
         if (superClass != null && superClass != Object.class) {
             fileLines.append(" extends " + superClass.getSimpleName());
@@ -228,11 +239,11 @@ public class Reflector {
         }
     }
 
-    private void printPackage(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) {
-        fileLines.append(this.getClass().getPackage()).append(";\n");
+    private static void printPackage(@NotNull String packageName, @NotNull StringBuilder fileLines) {
+        fileLines.append("package ").append(packageName).append(";\n");
     }
 
-    private void printImports(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) throws NoSuchMethodException {
+    private static void printImports(@NotNull Class<?> someClass, @NotNull StringBuilder fileLines) throws NoSuchMethodException {
         @NotNull Set<String> imports = new HashSet<>();
 
         collectImports(someClass, imports);
