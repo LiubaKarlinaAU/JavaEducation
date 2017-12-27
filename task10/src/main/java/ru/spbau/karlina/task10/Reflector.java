@@ -49,7 +49,7 @@ public class Reflector {
                 printDifferentMethods(secondClass, firstClass, writer);
     }
 
-    private static boolean printDifferentMethods(@NotNull Class<?> first, @NotNull Class<?> second, @NotNull PrintStream writer) {
+    private static boolean printDifferentMethods(@NotNull Class<?> first, @NotNull Class<?> second, PrintStream writer) {
         @NotNull Set<String> classMethods = Arrays.stream(first.getDeclaredMethods())
                 .map(m ->methodToString(m)).collect(Collectors.toCollection(HashSet::new));
 

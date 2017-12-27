@@ -9,8 +9,8 @@ import java.util.Scanner;
 import static junit.framework.TestCase.assertEquals;
 
 public class ReflectorTest {
-    private final String generatedClassPath = "src/test/java/ru/spbau/karlina/task10/generatedClasses/";
-    private final String packageName = "ru.spbau.karlina.task10.generatedClasses";
+    private final String generatedClassPath = "src/test/java/ru/spbau/karlina/task10/resources/generatedClasses/";
+    private final String packageName = "ru.spbau.karlina.task10.resources.generatedClasses";
     private final String classPath = "src/test/java/ru/spbau/karlina/task10/resources/testClasses/";
 
     /**
@@ -92,14 +92,13 @@ public class ReflectorTest {
     public void test4DiffClassesWithPrintClass() throws IOException, NoSuchMethodException, ClassNotFoundException {
         Reflector.printStructure(ClassA.class, generatedClassPath, packageName);
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        classLoader.loadClass(packageName + ".ClassA");
+        Class <?> generated = classLoader.loadClass(packageName + ".ClassA");
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        assertEquals(false, Reflector
-                .diffClasses(ru.spbau.karlina.task10.generatedClasses.ClassA.class,
-                        ru.spbau.karlina.task10.resources.testClasses.ClassA.class, System.out));
+        assertEquals(false, Reflector.diffClasses(generated,
+                        ClassA.class, System.out));
         assertEquals("", outContent.toString().trim());
 
         System.setOut(null);
