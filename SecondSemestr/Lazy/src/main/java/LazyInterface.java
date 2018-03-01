@@ -1,2 +1,3 @@
-public interface LazyInterface {
+public interface LazyInterface<T> {
+    T get();
 }
