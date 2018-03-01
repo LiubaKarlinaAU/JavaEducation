@@ -1,6 +1,12 @@
+package ru.spbau.karlina.task1;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Supplier;
 
-/** Representation of Multi thread lazy idea */
+/**
+ * Representation of Multi thread lazy idea
+ */
 public class MultiThreadLazy<T> implements LazyInterface<T> {
     private Supplier<T> supplier;
     private T result;
@@ -10,7 +16,7 @@ public class MultiThreadLazy<T> implements LazyInterface<T> {
      *
      * @param supplier - which will be saved
      */
-    public MultiThreadLazy(Supplier<T> supplier) {
+    public MultiThreadLazy(@NotNull Supplier<T> supplier) {
         this.supplier = supplier;
     }
 
@@ -18,10 +24,14 @@ public class MultiThreadLazy<T> implements LazyInterface<T> {
      * Method that call supplier's get method one time during all calls
      * Return a result of stored supplier get method
      *
-     * @return T result of supplier
+     * @return supplier result
      */
     public T get() {
-        if (supplier != null) {
+        if (supplier == null) {
+            return result;
+        }
+
+        synchronized (this) {
             result = supplier.get();
             supplier = null;
         }

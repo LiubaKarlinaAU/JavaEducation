@@ -1,6 +1,10 @@
+package ru.spbau.karlina.task1;
+
 import java.util.function.Supplier;
 
-/** Representation of single thread lazy idea */
+/**
+ * Representation of single thread lazy idea
+ */
 public class SingleThreadLazy<T> implements LazyInterface<T> {
     private Supplier<T> supplier;
     private T result;
