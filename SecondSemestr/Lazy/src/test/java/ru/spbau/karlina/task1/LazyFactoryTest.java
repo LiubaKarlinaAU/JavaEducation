@@ -128,4 +128,30 @@ public class LazyFactoryTest {
 
     }
 
+    /** Test on race condition uses multi threads lazy with a lot of threads */
+    @org.junit.Test
+    public void multiThreadTest6() throws Exception {
+        int count = 100;
+        final int[] result = new int[count];
+        Arrays.fill(result, 0);
+
+        MultiThreadLazy<Integer> lazy = LazyFactory.createMultiThreadLazy(() -> result[0] += 1);;
+        Thread[] threadArray = new Thread[count];
+
+        for (int i = 0; i < count; ++i) {
+            int finalI = i;
+            threadArray[i] = new Thread(() -> result[finalI] = lazy.get());
+        }
+
+        for (int i = 0; i < count; ++i) {
+            threadArray[i].start();
+        }
+
+
+        for (int i = 0; i < count; ++i) {
+            threadArray[i].join();
+            assertEquals(1, result[i]);
+        }
+
+    }
 }
