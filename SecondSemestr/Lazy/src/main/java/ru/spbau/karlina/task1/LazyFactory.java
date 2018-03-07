@@ -1,6 +1,6 @@
 package ru.spbau.karlina.task1;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
