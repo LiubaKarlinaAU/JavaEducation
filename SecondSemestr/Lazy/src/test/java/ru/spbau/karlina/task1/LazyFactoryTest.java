@@ -72,17 +72,60 @@ public class LazyFactoryTest {
         int count = 100;
         MultiThreadLazy<Integer> lazy = LazyFactory.createMultiThreadLazy(() -> 1 + 41);;
         Thread[] threadArray = new Thread[count];
-        final int[] result = {0};
+        final int[] result = new int[count];
+        Arrays.fill(result, 0);
 
         for (int i = 0; i < count; ++i) {
-            threadArray[i] = new Thread(() -> result[0] = lazy.get());
+            int finalI = i;
+            threadArray[i] = new Thread(() -> result[finalI] = lazy.get());
         }
+
+        for (int i = 0; i < count; ++i) {
+            threadArray[i].start();
+        }
+
 
         for (int i = 0; i < count; ++i) {
             threadArray[i].join();
+            assertEquals(42, result[i]);
         }
 
-        assertEquals(42, result[0]);
+    }
+
+    /** Test uses multi threads lazy with a lot of threads
+     *  Test checks that the evalution call called only once*/
+    @org.junit.Test
+    public void multiThreadTest5() throws Exception {
+        int count = 100;
+        int[] counter = new int[1];
+        counter[0] = 0;
+
+        Supplier<String> supplier = () -> {
+            counter[0]++;
+            return "abc" + "def";
+        };
+
+        SingleThreadLazy<String> lazy = LazyFactory.createSingleThreadLazy(supplier);
+        Thread[] threadArray = new Thread[count];
+
+        final String[] result = new String[count];
+
+        for (int i = 0; i < count; ++i) {
+            int finalI = i;
+            threadArray[i] = new Thread(() -> result[finalI] = lazy.get());
+        }
+
+        for (int i = 0; i < count; ++i) {
+            threadArray[i].start();
+        }
+
+
+        for (int i = 0; i < count; ++i) {
+            threadArray[i].join();
+            assertEquals("abcdef", result[i]);
+            assertEquals(1, counter[0]);
+        }
+
     }
 
 }
