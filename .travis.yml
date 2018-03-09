@@ -1,9 +1,8 @@
-language: java
+laguage: java
 jdk:
   - oraclejdk8
 os:
   - linux
 script:
   - cd SecondSemestr
-  - mvn test
-
+  - for directory in */; do cd "${directory}" && mvn test && cd ..; done
