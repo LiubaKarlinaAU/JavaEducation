@@ -107,9 +107,44 @@ public class ThreadPoolTest {
 
     }
 
+    @Test(expected = LightFuture.LightExecutionException.class)
+    public void throwExpectedExceptionTest() throws LightFuture.LightExecutionException {
+        ThreadPool pool = new ThreadPool(5);
+
+        LightFuture<Integer> task1 = pool.addTask(() -> null);
+        LightFuture<Integer> task2 = task1.thenApply((a) -> a * 2);
+
+        assertFalse(task1.isReady());
+        assertFalse(task2.isReady());
+        assertEquals(null, task1.get());
+        task2.get();
+    }
 
     @Test
-    public void shutdown() throws Exception {
+    public void shutdownTest() throws Exception {
+        ThreadPool pool = new ThreadPool(20);
+
+        LightFuture<Integer> task1 = pool.addTask(() -> 1 + 3);
+        LightFuture<LinkedHashSet<Object>> task2 = pool.addTask(() -> null);
+        LightFuture<String> task3 = pool.addTask(() -> "abs" +  "vbm");
+
+        pool.shutdown();
+
+        assertFalse(task1.isReady() || task2.isReady() || task3.isReady());
+    }
+
+    @Test
+    public void shutdownAndSleepTest() throws Exception {
+        ThreadPool pool = new ThreadPool(20);
+
+        LightFuture<Integer> task1 = pool.addTask(() -> 1 + 3);
+        LightFuture<LinkedHashSet<Object>> task2 = pool.addTask(() -> null);
+        LightFuture<String> task3 = pool.addTask(() -> "abs" +  "vbm");
+
+        pool.shutdown();
+        Thread.sleep(800);
+
+        assertFalse(task1.isReady() || task2.isReady() || task3.isReady());
     }
 
 }

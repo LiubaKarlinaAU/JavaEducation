@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 public class ThreadPool {
     private Thread[] threadArray;
     private final LinkedList<Task> queue = new LinkedList<>();
-    volatile static Exception exception = new Exception();
 
     /**
      * Class constructor makes initialization
