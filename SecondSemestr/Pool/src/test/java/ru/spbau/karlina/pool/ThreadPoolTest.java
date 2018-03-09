@@ -24,7 +24,7 @@ public class ThreadPoolTest {
         LightFuture<Integer> task = pool.addTask(() -> 1 + 3);
 
         sleep(1000);
-        //assertFalse(task.isReady());
+        assertFalse(task.isReady());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ThreadPoolTest {
 
         LightFuture<Integer> task1 = pool.addTask(() -> 1 + 3);
         LightFuture<LinkedHashSet<Object>> task2 = pool.addTask(() -> null);
-        LightFuture<String> task3 = pool.addTask(() -> "abs" +  "vbm");
+        LightFuture<String> task3 = pool.addTask(() -> "abs" + "vbm");
 
         assertFalse(task1.isReady());
         assertEquals(new Integer(4), task1.get());
@@ -70,7 +70,7 @@ public class ThreadPoolTest {
             return 1 + 3;
         });
         LightFuture<LinkedHashSet<Object>> task2 = pool.addTask(() -> null);
-        LightFuture<String> task3 = pool.addTask(() -> "abs" +  "vbm");
+        LightFuture<String> task3 = pool.addTask(() -> "abs" + "vbm");
 
         assertFalse(task1.isReady());
         assertEquals(new Integer(4), task1.get());
@@ -126,7 +126,7 @@ public class ThreadPoolTest {
 
         LightFuture<Integer> task1 = pool.addTask(() -> 1 + 3);
         LightFuture<LinkedHashSet<Object>> task2 = pool.addTask(() -> null);
-        LightFuture<String> task3 = pool.addTask(() -> "abs" +  "vbm");
+        LightFuture<String> task3 = pool.addTask(() -> "abs" + "vbm");
 
         pool.shutdown();
 
@@ -139,7 +139,7 @@ public class ThreadPoolTest {
 
         LightFuture<Integer> task1 = pool.addTask(() -> 1 + 3);
         LightFuture<LinkedHashSet<Object>> task2 = pool.addTask(() -> null);
-        LightFuture<String> task3 = pool.addTask(() -> "abs" +  "vbm");
+        LightFuture<String> task3 = pool.addTask(() -> "abs" + "vbm");
 
         pool.shutdown();
         Thread.sleep(800);
