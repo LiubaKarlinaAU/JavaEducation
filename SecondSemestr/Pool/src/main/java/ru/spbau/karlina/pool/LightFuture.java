@@ -11,7 +11,6 @@ public interface LightFuture<T> {
      *
      * @return true if task is done and false otherwise
      */
-    @NotNull
     boolean isReady();
 
     /**
