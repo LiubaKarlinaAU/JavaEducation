@@ -8,7 +8,7 @@ import java.util.function.Supplier;
  * Representation of Multi thread lazy idea
  */
 public class MultiThreadLazy<T> implements LazyInterface<T> {
-    private Supplier<T> supplier;
+    volatile private Supplier<T> supplier;
     private T result;
 
     /**
@@ -32,8 +32,10 @@ public class MultiThreadLazy<T> implements LazyInterface<T> {
         }
 
         synchronized (this) {
-            result = supplier.get();
-            supplier = null;
+            if (supplier != null) {
+                result = supplier.get();
+                supplier = null;
+            }
         }
 
         return result;
