@@ -11,9 +11,9 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.ru.spbau.karlina.ttt.ui.StatisticController"
             fx:id="statisticTableView">
     <center>
-        <TableView>
+        <TableView >
             <columns>
-            <TableColumn text="player">
+            <TableColumn text="player" >
                 <cellValueFactory>
                     <PropertyValueFactory property="gameType"/>
                 </cellValueFactory>
@@ -32,6 +32,8 @@
         </TableView>
     </center>
     <bottom>
-        <Button mnemonicParsing="false" text="Back to Menu" BorderPane.alignment="CENTER"/>
+        <Button text="Back to Menu"
+                BorderPane.alignment="CENTER"
+                onAction="#backToMainMenu"/>
     </bottom>
 </BorderPane>

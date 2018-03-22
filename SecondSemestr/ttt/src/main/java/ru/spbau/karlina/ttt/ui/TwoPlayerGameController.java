@@ -8,8 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class StatisticController {
-
+public class TwoPlayerGameController {
     public void backToMainMenu() throws IOException {
         Parent layout = FXMLLoader.load(getClass().getResource("/main/resources/main_menu.fxml"));
         Stage primaryStage = MainController.getPrimaryStage();
@@ -18,4 +17,5 @@ public class StatisticController {
                 primaryStage.getScene().getHeight());
         primaryStage.setScene(scene);
     }
+
 }

@@ -1,4 +1,4 @@
-package main.java.ru.spbau.karlina.ttt;
+package main.java.ru.spbau.karlina.ttt.logic;
 
 public class Model {
     private static final int FREE = 0;
