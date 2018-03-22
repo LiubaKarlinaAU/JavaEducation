@@ -30,7 +30,7 @@
                     <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Button onAction="#buttonClicked" maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                     <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                     <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="0" GridPane.rowIndex="2" />

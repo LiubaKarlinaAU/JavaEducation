@@ -23,6 +23,5 @@ public class OnePlayerGameController {
     }
 
     public void buttonClicked(ActionEvent actionEvent) {
-        Button button =
     }
 }
