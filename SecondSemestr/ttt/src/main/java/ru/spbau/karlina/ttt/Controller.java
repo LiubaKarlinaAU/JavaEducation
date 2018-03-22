@@ -1,4 +1,4 @@
-package ru.spbau.karlina.ttt;
+package main.java.ru.spbau.karlina.ttt;
 
 import javafx.fxml.FXML;
 
