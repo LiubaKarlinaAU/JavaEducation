@@ -1,11 +1,22 @@
 package main.java.ru.spbau.karlina.ttt.logic;
 
+/**
+ * This class is representation of artificial intelligence
+ * Helps playing tic-tac-toe alone
+ * Hard one - his move is based on greed situation
+ */
 public class HardBot implements BotInterface{
     static private class Cell {
         static int i = 0;
         static int j = 0;
     }
 
+    /**
+     * Method lookup all empty cells on play greed and
+     * Choose one cell to make move after analysed greed situation
+     *
+     * @param model - to have access to play greed
+     */
     @Override
     public void makeMove(Model model) {
         if (checkingRowForTwoZero(model)){

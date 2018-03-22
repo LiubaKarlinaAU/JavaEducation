@@ -1,5 +1,15 @@
 package main.java.ru.spbau.karlina.ttt.logic;
 
+/**
+ * This interface is representation of artificial intelligence
+ * Helps playing tic-tac-toe alone
+*/
 public interface BotInterface {
-    public void makeMove(Model model);
+    /**
+     * Method lookup all empty cells on play greed and
+     * Choose one cell to make move
+     *
+     * @param model - to have access to play greed
+     */
+    void makeMove(Model model);
 }

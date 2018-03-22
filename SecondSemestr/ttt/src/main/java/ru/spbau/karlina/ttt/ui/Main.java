@@ -18,7 +18,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/main/resources/main_menu.fxml"));
         primaryStage.setTitle("Tic-tac-toe");
 
-        MainController.setPrimaryStage(primaryStage);
+        MainController.initialize(primaryStage);
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
     }
