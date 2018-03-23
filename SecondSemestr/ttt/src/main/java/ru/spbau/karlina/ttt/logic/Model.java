@@ -1,8 +1,5 @@
 package main.java.ru.spbau.karlina.ttt.logic;
 
-
-import java.util.ArrayList;
-
 import static main.java.ru.spbau.karlina.ttt.logic.CellStates.*;
 import static main.java.ru.spbau.karlina.ttt.logic.GameResult.*;
 
@@ -96,7 +93,8 @@ public class Model {
             if (greed[i][0] == greed[i][1] && greed[i][0] == greed[i][2]) {
                 if (greed[i][0] == FIRST)
                     return FIRST_WIN;
-                return SECOND_WIN;
+                else if (greed[i][0] == SECOND)
+                    return SECOND_WIN;
             }
         }
 
@@ -108,7 +106,8 @@ public class Model {
             if (greed[0][i] == greed[1][i] && greed[0][i] == greed[2][i]) {
                 if (greed[0][i] == FIRST)
                     return FIRST_WIN;
-                return SECOND_WIN;
+                else if (greed[0][i] == SECOND)
+                    return SECOND_WIN;
             }
         }
 
@@ -119,13 +118,15 @@ public class Model {
         if (greed[0][0] == greed[1][1] && greed[1][1] == greed[2][2]) {
             if (greed[1][1] == FIRST)
                 return FIRST_WIN;
-            return SECOND_WIN;
+            else if (greed[1][1] == SECOND)
+                return SECOND_WIN;
         }
 
         if (greed[2][0] == greed[1][1] && greed[1][1] == greed[0][2]) {
             if (greed[1][1] == FIRST)
                 return FIRST_WIN;
-            return SECOND_WIN;
+            else if (greed[1][1] == SECOND)
+                return SECOND_WIN;
         }
 
         return GAME_IN_PROGRESS;

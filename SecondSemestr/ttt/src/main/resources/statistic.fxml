@@ -2,38 +2,17 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.ru.spbau.karlina.ttt.ui.StatisticController">
+
+    <Text fx:id="countOfGames" textAlignment="CENTER" />
+    <Text fx:id="firstWins" textAlignment="CENTER"/>
+    <Text fx:id="secondWins" textAlignment="CENTER"/>
+    <Text fx:id="countOfDraw" textAlignment="CENTER"/>
+    <Text fx:id="notFinished" textAlignment="CENTER"/>
 
 
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.ru.spbau.karlina.ttt.ui.StatisticController"
-            fx:id="statisticTableView">
-    <center>
-        <TableView >
-            <columns>
-            <TableColumn text="player" >
-                <cellValueFactory>
-                    <PropertyValueFactory property="gameType"/>
-                </cellValueFactory>
-            </TableColumn>
-            <TableColumn text="win">
-                <cellValueFactory>
-                    <PropertyValueFactory property="gameType"/>
-                </cellValueFactory>
-            </TableColumn>
-            <TableColumn text="lose">
-                <cellValueFactory>
-                    <PropertyValueFactory property="gameType"/>
-                </cellValueFactory>
-            </TableColumn>
-            </columns>
-        </TableView>
-    </center>
-    <bottom>
-        <Button text="Back to Menu"
-                BorderPane.alignment="CENTER"
-                onAction="#backToMainMenu"/>
-    </bottom>
-</BorderPane>
+    <Button onAction="#backToMainMenu" text="Back to Menu" BorderPane.alignment="CENTER" />
+</VBox>

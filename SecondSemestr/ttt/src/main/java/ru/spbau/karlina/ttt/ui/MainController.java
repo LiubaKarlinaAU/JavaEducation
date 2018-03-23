@@ -18,7 +18,7 @@ public class MainController {
      * @param stage - to be set */
     public static void initialize(Stage stage) {
         primaryStage = stage;
-        OnePlayerGameController.setDataStore(new DataStore());
+        StatisticController.setDataStore();
     }
 
     /** Primary stage getter
@@ -54,7 +54,7 @@ public class MainController {
         Scene scene = new Scene(layout,
                 primaryStage.getScene().getWidth(),
                 primaryStage.getScene().getHeight());
-        OnePlayerGameController.initialize();
+        OnePlayerGameController.settings(StatisticController.getDataStore());
 
         primaryStage.setScene(scene);
     }

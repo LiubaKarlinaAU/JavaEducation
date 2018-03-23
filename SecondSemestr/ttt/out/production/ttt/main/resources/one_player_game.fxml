@@ -30,30 +30,64 @@
                     <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <Button fx:id="button00" onAction="#buttonClicked" maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                    <Button maxHeight="Infinity" maxWidth="Infinity" text="" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                    <Button fx:id="button00"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity" text=""
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0" />
+                    <Button fx:id="button10"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="0" />
+                    <Button fx:id="button01"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1" />
+                    <Button fx:id="button02"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="2" />
+                    <Button fx:id="button20"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="2"
+                            GridPane.rowIndex="0" />
+                    <Button fx:id="button11"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="1" />
+                    <Button fx:id="button21"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="2"
+                            GridPane.rowIndex="1" />
+                    <Button fx:id="button12"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="2" />
+                    <Button fx:id="button22"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="2"
+                            GridPane.rowIndex="2" />
                 </children>
             </GridPane>
 
             <VBox prefHeight="200" prefWidth="150">
                 <children>
-                    <Text text="Your name:" />
-                    <TextField fx:id="player_name"/>
                     <RadioButton fx:id="levelButton" onAction="#changeLevel" text="Hard bot" />
-                    <Button prefHeight="Infinity" prefWidth="Infinity" text="New Game" />
+                    <Button onAction="#runNewGame" prefHeight="100" prefWidth="Infinity" text="New Game" />
                 </children>
             </VBox>
 
         </HBox>
 
-        <Button fx:id="backToMenu_gameScene" onAction="#backToMainMenu" text="Back to Main Menu" />
+        <Button onAction="#backToMainMenu" text="Back to Main Menu" />
 
     </children>
 </VBox>
