@@ -6,15 +6,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
+/**Main class to extends Application and initialize MainController*/
 public class Main extends Application {
 
     /**
      * Initialize application.
-     * @param primaryStage a stage, where we will are playing
-     * @throws Exception if needed.
+     * @param primaryStage a stage, where we will play.
+     * @throws IOException if there is a problem with load main_menu.fxml file.
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/main/resources/main_menu.fxml"));
         primaryStage.setTitle("Tic-tac-toe");
 

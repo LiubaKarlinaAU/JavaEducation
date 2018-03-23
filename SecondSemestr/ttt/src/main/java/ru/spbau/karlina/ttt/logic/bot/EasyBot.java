@@ -1,4 +1,7 @@
-package main.java.ru.spbau.karlina.ttt.logic;
+package main.java.ru.spbau.karlina.ttt.logic.bot;
+
+import main.java.ru.spbau.karlina.ttt.logic.Model;
+import main.java.ru.spbau.karlina.ttt.logic.bot.BotInterface;
 
 import java.util.ArrayList;
 import java.util.Random;

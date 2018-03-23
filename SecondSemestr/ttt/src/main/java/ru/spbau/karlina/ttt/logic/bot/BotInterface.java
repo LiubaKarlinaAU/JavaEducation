@@ -1,4 +1,6 @@
-package main.java.ru.spbau.karlina.ttt.logic;
+package main.java.ru.spbau.karlina.ttt.logic.bot;
+
+import main.java.ru.spbau.karlina.ttt.logic.Model;
 
 /**
  * This interface is representation of artificial intelligence
