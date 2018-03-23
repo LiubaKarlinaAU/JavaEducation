@@ -4,6 +4,7 @@ import main.java.ru.spbau.karlina.ttt.logic.CellStates;
 import main.java.ru.spbau.karlina.ttt.logic.Model;
 import main.java.ru.spbau.karlina.ttt.logic.bot.BotInterface;
 
+import static main.java.ru.spbau.karlina.ttt.logic.CellStates.EMPTY;
 import static main.java.ru.spbau.karlina.ttt.logic.CellStates.FIRST;
 import static main.java.ru.spbau.karlina.ttt.logic.CellStates.SECOND;
 
@@ -164,9 +165,32 @@ public class HardBot implements BotInterface {
      *
      * @param model - to take information about greed.
      * @return true - if found move to win and
-     *         false - otherwise.
+     * false - otherwise.
      */
     private boolean checkingColumnForTwoZero(Model model) {
+        for (int i = 0; i < 3; ++i) {
+            if (model.getCellType(i, 0) == SECOND && model.getCellType(1, i) == SECOND) {
+                if (model.getCellType(2, i) == EMPTY) {
+                    model.setSecondMove(2, i);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 2) == SECOND && model.getCellType(1, i) == SECOND) {
+                if (model.getCellType(0, i) == EMPTY) {
+                    model.setSecondMove(0, i);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 0) == SECOND && model.getCellType(2, i) == SECOND) {
+                if (model.getCellType(1, i) == EMPTY) {
+                    model.setSecondMove(1, i);
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -175,9 +199,32 @@ public class HardBot implements BotInterface {
      *
      * @param model - to take information about greed.
      * @return true - if found move to win and
-     *         false - otherwise.
+     * false - otherwise.
      */
     private boolean checkingRowForTwoZero(Model model) {
+        for (int i = 0; i < 3; ++i) {
+            if (model.getCellType(i, 0) == SECOND && model.getCellType(i, 1) == SECOND) {
+                if (model.getCellType(i, 2) == EMPTY) {
+                    model.setSecondMove(i, 2);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 2) == SECOND && model.getCellType(i, 1) == SECOND) {
+                if (model.getCellType(i, 0) == EMPTY) {
+                    model.setSecondMove(i, 0);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 0) == SECOND && model.getCellType(i, 2) == SECOND) {
+                if (model.getCellType(i, 1) == EMPTY) {
+                    model.setSecondMove(i, 1);
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -186,9 +233,32 @@ public class HardBot implements BotInterface {
      *
      * @param model - to take information about greed.
      * @return true - if found dangerous and make move.
-     *         false - otherwise.
+     * false - otherwise.
      */
     private boolean checkingColumnForTwoCross(Model model) {
+        for (int i = 0; i < 3; ++i) {
+            if (model.getCellType(i, 0) == FIRST && model.getCellType(1, i) == FIRST) {
+                if (model.getCellType(2, i) == EMPTY) {
+                    model.setSecondMove(2, i);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 2) == FIRST && model.getCellType(1, i) == FIRST) {
+                if (model.getCellType(0, i) == EMPTY) {
+                    model.setSecondMove(0, i);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 0) == FIRST && model.getCellType(2, i) == FIRST) {
+                if (model.getCellType(1, i) == EMPTY) {
+                    model.setSecondMove(1, i);
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -200,6 +270,29 @@ public class HardBot implements BotInterface {
      * false - otherwise
      */
     private boolean checkingRowForTwoCross(Model model) {
+        for (int i = 0; i < 3; ++i) {
+            if (model.getCellType(i, 0) == FIRST && model.getCellType(i, 1) == FIRST) {
+                if (model.getCellType(i, 2) == EMPTY) {
+                    model.setSecondMove(i, 2);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 2) == FIRST && model.getCellType(i, 1) == FIRST) {
+                if (model.getCellType(i, 0) == EMPTY) {
+                    model.setSecondMove(i, 0);
+                    return true;
+                }
+            }
+
+            if (model.getCellType(i, 0) == FIRST && model.getCellType(i, 2) == FIRST) {
+                if (model.getCellType(i, 1) == EMPTY) {
+                    model.setSecondMove(i, 1);
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 }
