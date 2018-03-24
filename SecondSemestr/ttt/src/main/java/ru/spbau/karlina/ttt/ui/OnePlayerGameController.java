@@ -9,13 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import main.java.ru.spbau.karlina.ttt.logic.*;
 import main.java.ru.spbau.karlina.ttt.logic.bot.BotInterface;
 import main.java.ru.spbau.karlina.ttt.logic.bot.EasyBot;
 import main.java.ru.spbau.karlina.ttt.logic.bot.HardBot;
 import main.java.ru.spbau.karlina.ttt.store.DataStore;
-import main.java.ru.spbau.karlina.ttt.store.PlayerType;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,8 +31,12 @@ public class OnePlayerGameController implements Initializable {
     private static Model model;
     private static BotInterface bot;
     private static DataStore store;
-    private PlayerType playerType = X_PLAYER;
     private static Button[][] buttons = new Button[3][3];
+
+    @FXML
+    private RadioButton levelButton;
+    @FXML
+    private Text gameResult;
 
     @FXML
     private Button button00;
@@ -52,9 +56,6 @@ public class OnePlayerGameController implements Initializable {
     private Button button21;
     @FXML
     private Button button22;
-
-    @FXML
-    private RadioButton levelButton;
 
     /**
      * Set dataStore, model and bot.
@@ -100,14 +101,17 @@ public class OnePlayerGameController implements Initializable {
 
                     @Override
                     public void handle(ActionEvent event) {
-                        if (attemptToFill(x, y)) {
+                        if (isEmpty(x, y)) {
+                            model.setFirstMove(x,y);
                             drawCells();
-                            GameResult result = model.gameStatus();
-                            if (result != GameResult.GAME_IN_PROGRESS) {
-                                makeGameRecord(result);
+                            if (model.gameStatus() != GameResult.GAME_IN_PROGRESS) {
+                                runNewGame();
                             } else {
                                 bot.makeMove(model);
                                 drawCells();
+                                if (model.gameStatus() != GameResult.GAME_IN_PROGRESS) {
+                                    runNewGame();
+                                }
                             }
                         }
                     }
@@ -134,13 +138,18 @@ public class OnePlayerGameController implements Initializable {
     /** Saves current game result and make settings for new one. */
     @FXML
     private void runNewGame() {
-        makeGameRecord(model.gameStatus());
-        model.makeEmpty();
+        GameResult result = model.gameStatus();
+
+        if (gameStarted()) {
+            gameResult.setText(TwoPlayerGameController.makeNotification(result));
+            makeGameRecord(result);
+        }model.makeEmpty();
         drawCells();
     }
 
     /** Execute changing between easy and hard bot */
-    public void changeLevel(ActionEvent actionEvent) {
+    @FXML
+    private void changeLevel() {
         if (levelButton.isSelected()) {
             bot = new HardBot();
         } else {
@@ -167,23 +176,27 @@ public class OnePlayerGameController implements Initializable {
             }
     }
 
-    /** Trying to set mark on cell with given coordinate.
+    /**
+     * Checking is on the play greed filled cell
+     *
+     * @return true - if there is filled cel and false otherwise
+     */
+    private boolean gameStarted() {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                if (model.getCellType(i, j) != CellStates.EMPTY)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**Checking is cell with given coordinate empty.
      * @param i - first coordinate.
      * @param j - second coordinate. */
-    private boolean attemptToFill(int i, int j) {
-        if (model.getCellType(i, j) != CellStates.EMPTY) {
-            return false;
-        }
-
-        if (playerType == X_PLAYER) {
-            model.setFirstMove(i, j);
-        }
-        GameResult result = model.gameStatus();
-        if (result != GameResult.GAME_IN_PROGRESS) {
-            makeGameRecord(result);
-        }
-
-        return true;
+    private boolean isEmpty(int i, int j) {
+        return model.getCellType(i, j) == CellStates.EMPTY;
     }
 
     /** Save game result. */

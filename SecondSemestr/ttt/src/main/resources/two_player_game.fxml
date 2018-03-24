@@ -17,7 +17,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="main.java.ru.spbau.karlina.ttt.ui.TwoPlayerGameController">
     <children>
-        <Text fx:id="textField">Your Turn Mister X</Text>
+        <Text fx:id="whoseTurnTextField">Your Turn Mister X</Text>
         <HBox>
             <GridPane prefHeight="200.0" prefWidth="250">
                 <columnConstraints>
@@ -87,7 +87,8 @@
             </VBox>
         
         </HBox>
-        
+        <Text fx:id="gameResult">First Game</Text>
+
         <Button fx:id="backToMenu_gameScene" onAction="#backToMainMenu" text="Back to Main Menu" />
 
     </children>

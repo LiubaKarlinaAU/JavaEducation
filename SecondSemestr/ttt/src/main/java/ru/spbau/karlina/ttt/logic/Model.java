@@ -69,11 +69,22 @@ public class Model {
             return result;
         }
 
-        if (countEmptyCells() != 9) {
+        if (countEmptyCells() != 0) {
             return GAME_IN_PROGRESS;
         }
 
         return DRAW;
+    }
+
+
+    /**
+     * Checking is cell with given coordinates empty.
+     *
+     * @param i - first coordinate.
+     * @param j - second coordinate.
+     */
+    public boolean isEmpty(int i, int j) {
+        return greed[i][j] == EMPTY;
     }
 
     private int countEmptyCells() {

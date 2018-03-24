@@ -28,11 +28,13 @@ public class TwoPlayerGameController implements Initializable {
     private static Model model;
     private static DataStore store;
     private static Button[][] buttons = new Button[3][3];
+    private PlayerType playerType = X_PLAYER;
 
     @FXML
-    private Text textField;
+    private Text gameResult;
+    @FXML
+    private Text whoseTurnTextField;
 
-    private PlayerType playerType = X_PLAYER;
     @FXML
     private Button button00;
     @FXML
@@ -95,12 +97,16 @@ public class TwoPlayerGameController implements Initializable {
 
                     @Override
                     public void handle(ActionEvent event) {
-                        if (attemptToFill(x, y)) {
+                        if (model.isEmpty(x, y)) {
+                            if (playerType == X_PLAYER) {
+                                model.setFirstMove(x, y);
+                            } else {
+                                model.setSecondMove(x, y);
+                            }
                             changePlayer();
                             drawCells();
-                            GameResult result = model.gameStatus();
-                            if (result != GameResult.GAME_IN_PROGRESS) {
-                                makeGameRecord(result);
+                            if (model.gameStatus() != GameResult.GAME_IN_PROGRESS) {
+                                runNewGame();
                             }
                         }
                     }
@@ -115,7 +121,9 @@ public class TwoPlayerGameController implements Initializable {
      */
     @FXML
     private void backToMainMenu() throws IOException {
-        makeGameRecord(model.gameStatus());
+        if (gameStarted()) {
+            makeGameRecord(model.gameStatus());
+        }
 
         Parent layout = FXMLLoader.load(getClass().getResource("/main/resources/main_menu.fxml"));
         Stage primaryStage = MainController.getPrimaryStage();
@@ -132,10 +140,58 @@ public class TwoPlayerGameController implements Initializable {
      */
     @FXML
     private void runNewGame() {
-        makeGameRecord(model.gameStatus());
+        GameResult result = model.gameStatus();
+
+        if (gameStarted()) {
+            gameResult.setText(makeNotification(result));
+            makeGameRecord(result);
+        }
+
         model.makeEmpty();
         playerType = X_PLAYER;
         drawCells();
+    }
+
+    /**
+     * Make notification about last game result
+     *
+     * @param result - information about game result
+     * @return string with correct notification
+     */
+    public static String makeNotification(GameResult result) {
+        String notification = "In last game ";
+        switch (result) {
+            case FIRST_WIN:
+                notification += "X player wins!";
+                break;
+            case SECOND_WIN:
+                notification += "O player wins!";
+                break;
+            case DRAW:
+                notification = "Last game was draw.";
+                break;
+            case GAME_IN_PROGRESS:
+                notification = "Last game wasn't finished.";
+                break;
+        }
+
+        return notification;
+    }
+
+    /**
+     * Checking is on the play greed filled cell
+     *
+     * @return true - if there is filled cel and false otherwise
+     */
+    private boolean gameStarted() {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                if (model.getCellType(i, j) != CellStates.EMPTY)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -157,7 +213,7 @@ public class TwoPlayerGameController implements Initializable {
                 }
 
             }
-        textField.setText("Your Turn Mister " + (playerType == PlayerType.X_PLAYER ? "X" : "O"));
+        whoseTurnTextField.setText("Your Turn Mister " + (playerType == PlayerType.X_PLAYER ? "X" : "O"));
     }
 
     /**
@@ -165,31 +221,6 @@ public class TwoPlayerGameController implements Initializable {
      */
     private void changePlayer() {
         playerType = playerType == PlayerType.X_PLAYER ? PlayerType.O_PLAYER : PlayerType.X_PLAYER;
-    }
-
-
-    /**
-     * Trying to set mark on cell with given coordinate.
-     *
-     * @param i - first coordinate.
-     * @param j - second coordinate.
-     */
-    private boolean attemptToFill(int i, int j) {
-        if (model.getCellType(i, j) != CellStates.EMPTY) {
-            return false;
-        }
-
-        if (playerType == X_PLAYER) {
-            model.setFirstMove(i, j);
-        } else {
-            model.setSecondMove(i, j);
-        }
-        GameResult result = model.gameStatus();
-        if (result != GameResult.GAME_IN_PROGRESS) {
-            makeGameRecord(result);
-        }
-
-        return true;
     }
 
     /**
