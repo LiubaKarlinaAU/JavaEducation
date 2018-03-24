@@ -3,9 +3,20 @@ package main.java.ru.spbau.karlina.ttt.logic;
 import static main.java.ru.spbau.karlina.ttt.logic.CellStates.*;
 import static main.java.ru.spbau.karlina.ttt.logic.GameResult.*;
 
+/**
+ * Class represent a tic-tac-toe play greed
+ * Contains functions to manage game process
+ */
 public class Model {
 
     private CellStates[][] greed = new CellStates[3][3];
+
+    /**
+     * Constructor makes all cells empty
+     */
+    public Model() {
+        makeEmpty();
+    }
 
     /**
      * Greed cells setts out with CellStates.EMPTY
