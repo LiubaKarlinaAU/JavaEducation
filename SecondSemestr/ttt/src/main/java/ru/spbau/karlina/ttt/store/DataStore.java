@@ -4,14 +4,21 @@ import main.java.ru.spbau.karlina.ttt.logic.GameResult;
 
 import java.util.ArrayList;
 
+/**
+ * Class represent a store for game result recording
+ */
 public class DataStore {
-    private static int gameCount = 0;
-    private static int crossWins = 0;
-    private static int naughtWins = 0;
-    private static int drawCount = 0;
-    private static int notFinished = 0;
+    private int gameCount = 0;
+    private int crossWins = 0;
+    private int naughtWins = 0;
+    private int drawCount = 0;
+    private int notFinished = 0;
 
-
+    /**
+     * Add a record about given game result
+     *
+     * @param result - to take information for recording
+     */
     public void addRecord(GameResult result) {
         gameCount++;
 
@@ -31,23 +38,48 @@ public class DataStore {
         }
     }
 
-    public static int getGameCount() {
+    /**
+     * Game count getter.
+     *
+     * @return count of played games.
+     */
+    public int getGameCount() {
         return gameCount;
     }
 
-    public static int getCrossWins() {
+    /**
+     * Cross wins game count getter.
+     *
+     * @return count of cross wins games.
+     */
+    public int getCrossWins() {
         return crossWins;
     }
 
-    public static int getNaughtWins() {
+    /**
+     * Naught wins game count getter.
+     *
+     * @return count of naught wins games.
+     */
+    public int getNaughtWins() {
         return naughtWins;
     }
 
-    public static int getDrawCount() {
+    /**
+     * Draw game count getter.
+     *
+     * @return count of played draw games.
+     */
+    public int getDrawCount() {
         return drawCount;
     }
 
-    public static int getNotFinished() {
+    /**
+     * Game not finished count getter.
+     *
+     * @return count of not finished games.
+     */
+    public int getNotFinished() {
         return notFinished;
     }
 }

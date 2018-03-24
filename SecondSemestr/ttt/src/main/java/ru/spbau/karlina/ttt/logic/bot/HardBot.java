@@ -169,21 +169,21 @@ public class HardBot implements BotInterface {
      */
     private boolean checkingColumnForTwoZero(Model model) {
         for (int i = 0; i < 3; ++i) {
-            if (model.getCellType(i, 0) == SECOND && model.getCellType(1, i) == SECOND) {
+            if (model.getCellType(0, i) == SECOND && model.getCellType(1, i) == SECOND) {
                 if (model.getCellType(2, i) == EMPTY) {
                     model.setSecondMove(2, i);
                     return true;
                 }
             }
 
-            if (model.getCellType(i, 2) == SECOND && model.getCellType(1, i) == SECOND) {
+            if (model.getCellType(2, i) == SECOND && model.getCellType(1, i) == SECOND) {
                 if (model.getCellType(0, i) == EMPTY) {
                     model.setSecondMove(0, i);
                     return true;
                 }
             }
 
-            if (model.getCellType(i, 0) == SECOND && model.getCellType(2, i) == SECOND) {
+            if (model.getCellType(0, i) == SECOND && model.getCellType(2, i) == SECOND) {
                 if (model.getCellType(1, i) == EMPTY) {
                     model.setSecondMove(1, i);
                     return true;
@@ -237,21 +237,21 @@ public class HardBot implements BotInterface {
      */
     private boolean checkingColumnForTwoCross(Model model) {
         for (int i = 0; i < 3; ++i) {
-            if (model.getCellType(i, 0) == FIRST && model.getCellType(1, i) == FIRST) {
+            if (model.getCellType(0, i) == FIRST && model.getCellType(1, i) == FIRST) {
                 if (model.getCellType(2, i) == EMPTY) {
                     model.setSecondMove(2, i);
                     return true;
                 }
             }
 
-            if (model.getCellType(i, 2) == FIRST && model.getCellType(1, i) == FIRST) {
+            if (model.getCellType(2, i) == FIRST && model.getCellType(1, i) == FIRST) {
                 if (model.getCellType(0, i) == EMPTY) {
                     model.setSecondMove(0, i);
                     return true;
                 }
             }
 
-            if (model.getCellType(i, 0) == FIRST && model.getCellType(2, i) == FIRST) {
+            if (model.getCellType(0, i) == FIRST && model.getCellType(2, i) == FIRST) {
                 if (model.getCellType(1, i) == EMPTY) {
                     model.setSecondMove(1, i);
                     return true;
