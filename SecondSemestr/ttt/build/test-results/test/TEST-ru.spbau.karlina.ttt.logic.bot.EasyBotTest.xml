@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ru.spbau.karlina.ttt.logic.bot.EasyBotTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-03-24T12:10:19" hostname="liuba-Vostro-5480" time="0.004">
-  <properties/>
-  <testcase name="makeMoveOnAlmostFilledGreed" classname="ru.spbau.karlina.ttt.logic.bot.EasyBotTest" time="0.002"/>
-  <testcase name="makeMoveOnEmptyGreed" classname="ru.spbau.karlina.ttt.logic.bot.EasyBotTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
