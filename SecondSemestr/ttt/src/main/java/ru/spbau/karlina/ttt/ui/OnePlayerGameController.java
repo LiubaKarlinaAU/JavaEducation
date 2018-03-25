@@ -1,4 +1,4 @@
-package main.java.ru.spbau.karlina.ttt.ui;
+package ru.spbau.karlina.ttt.ui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,17 +11,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import main.java.ru.spbau.karlina.ttt.logic.*;
-import main.java.ru.spbau.karlina.ttt.logic.bot.BotInterface;
-import main.java.ru.spbau.karlina.ttt.logic.bot.EasyBot;
-import main.java.ru.spbau.karlina.ttt.logic.bot.HardBot;
-import main.java.ru.spbau.karlina.ttt.store.DataStore;
+import ru.spbau.karlina.ttt.logic.CellStates;
+import ru.spbau.karlina.ttt.logic.GameResult;
+import ru.spbau.karlina.ttt.logic.Model;
+import ru.spbau.karlina.ttt.logic.bot.BotInterface;
+import ru.spbau.karlina.ttt.logic.bot.EasyBot;
+import ru.spbau.karlina.ttt.logic.bot.HardBot;
+import ru.spbau.karlina.ttt.store.DataStore;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static main.java.ru.spbau.karlina.ttt.store.PlayerType.*;
+import static ru.spbau.karlina.ttt.store.PlayerType.*;
 
 /**
  * Controls one player version of tic-tac-toe game.
@@ -126,7 +128,7 @@ public class OnePlayerGameController implements Initializable {
      */
     @FXML
     private void backToMainMenu() throws IOException {
-        Parent layout = FXMLLoader.load(getClass().getResource("/main/resources/main_menu.fxml"));
+        Parent layout = FXMLLoader.load(getClass().getResource("/main_menu.fxml"));
         Stage primaryStage = MainController.getPrimaryStage();
         Scene scene = new Scene(layout,
                 primaryStage.getScene().getWidth(),

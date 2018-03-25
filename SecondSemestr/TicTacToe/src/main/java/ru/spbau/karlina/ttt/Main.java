@@ -1,10 +1,11 @@
-package main.java.ru.spbau.karlina.ttt.ui;
+package ru.spbau.karlina.ttt;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ru.spbau.karlina.ttt.ui.MainController;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/main/resources/main_menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/main_menu.fxml"));
         primaryStage.setTitle("Tic-tac-toe");
 
         MainController.initialize(primaryStage);

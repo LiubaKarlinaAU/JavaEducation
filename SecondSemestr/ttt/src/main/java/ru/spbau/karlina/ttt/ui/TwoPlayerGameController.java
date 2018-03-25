@@ -1,4 +1,4 @@
-package main.java.ru.spbau.karlina.ttt.ui;
+package ru.spbau.karlina.ttt.ui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,15 +10,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import main.java.ru.spbau.karlina.ttt.logic.*;
-import main.java.ru.spbau.karlina.ttt.store.DataStore;
-import main.java.ru.spbau.karlina.ttt.store.PlayerType;
+import ru.spbau.karlina.ttt.logic.*;
+import ru.spbau.karlina.ttt.store.DataStore;
+import ru.spbau.karlina.ttt.store.PlayerType;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static main.java.ru.spbau.karlina.ttt.store.PlayerType.*;
+import static ru.spbau.karlina.ttt.store.PlayerType.*;
 
 /**
  * Controls two player version of tic-tac-toe game.
@@ -125,7 +125,7 @@ public class TwoPlayerGameController implements Initializable {
             makeGameRecord(model.gameStatus());
         }
 
-        Parent layout = FXMLLoader.load(getClass().getResource("/main/resources/main_menu.fxml"));
+        Parent layout = FXMLLoader.load(getClass().getResource("/main_menu.fxml"));
         Stage primaryStage = MainController.getPrimaryStage();
 
         Scene scene = new Scene(layout,
