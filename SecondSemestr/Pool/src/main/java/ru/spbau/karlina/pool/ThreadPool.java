@@ -26,23 +26,24 @@ public class ThreadPool {
                 try {
                     while (!Thread.interrupted()) {
                         Task task = null;
-                        synchronized (ThreadPool.this) {
+                        synchronized (this) {
                             while (queue.isEmpty()) {
                                 wait();
                                 task = queue.poll();
                             }
 
-                            synchronized (task) {
-                                task.get();
-                                task.notifyAll();
+                            if (task != null) {
+                                synchronized (task) {
+                                    task.get();
+                                    task.notifyAll();
+                                }
                             }
 
-                            synchronized (ThreadPool.this) {
-                                notify();
-                            }
+                            notify();
                         }
                     }
-                } catch (Exception e) {
+                } catch (LightFuture.LightExecutionException ignored) {
+                } catch (InterruptedException e) {
                 }
             }
             );
@@ -59,12 +60,12 @@ public class ThreadPool {
      * @return added task that represents like interface
      */
     public <T> LightFuture<T> addTask(@NotNull Supplier<T> supplier) {
+        Task task = new Task(supplier);
         synchronized (this) {
-            Task task = new Task(supplier);
             queue.add(task);
             notify();
-            return task;
         }
+        return task;
     }
 
     /**
@@ -108,7 +109,7 @@ public class ThreadPool {
          * Calculate task's computation only once
          */
         @Override
-        public synchronized T get() throws LightExecutionException {
+        public T get() throws LightExecutionException {
             if (supplier != null) {
                 try {
                     result = supplier.get();
@@ -117,11 +118,11 @@ public class ThreadPool {
                 } catch (Exception e) {
                     throw new LightExecutionException(e.getMessage());
                 } finally {
-                    for (Task task : dependsTasks) {
-                        synchronized (ThreadPool.this) {
+                    synchronized (ThreadPool.this) {
+                        for (Task task : dependsTasks) {
                             queue.add(task);
-                            notify();
                         }
+                        ThreadPool.this.notifyAll();
                     }
                 }
             }

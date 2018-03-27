@@ -144,7 +144,7 @@ public class ThreadPoolTest {
         pool.shutdown();
         Thread.sleep(800);
 
-        assertFalse(task1.isReady() || task2.isReady() || task3.isReady());
+        assertFalse(task1.isReady() && task2.isReady() && task3.isReady());
     }
 
 }
