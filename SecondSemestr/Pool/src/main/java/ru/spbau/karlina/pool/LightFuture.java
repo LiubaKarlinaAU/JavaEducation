@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-/** Task interface representation */
+/**
+ * Task interface representation
+ */
 public interface LightFuture<T> {
     /**
      * Checks if task is ready.
@@ -29,10 +31,11 @@ public interface LightFuture<T> {
      * @param function - function to create new task
      * @return new task
      */
-    @NotNull
-    <U> LightFuture<U> thenApply(Function<T, U> function);
+    @NotNull <U> LightFuture<U> thenApply(Function<T, U> function);
 
-    /** Special exception for LightFuture interface */
+    /**
+     * Special exception for LightFuture interface
+     */
     class LightExecutionException extends Exception {
         public LightExecutionException(String message) {
             super(message);
