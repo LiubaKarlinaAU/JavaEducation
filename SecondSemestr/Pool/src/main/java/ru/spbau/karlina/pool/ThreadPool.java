@@ -60,7 +60,7 @@ public class ThreadPool {
      * @return added task that represents like interface
      */
     public <T> LightFuture<T> addTask(@NotNull Supplier<T> supplier) {
-        Task task = new Task(supplier);
+        Task<T> task = new Task<>(supplier);
         synchronized (this) {
             queue.add(task);
             notify();
