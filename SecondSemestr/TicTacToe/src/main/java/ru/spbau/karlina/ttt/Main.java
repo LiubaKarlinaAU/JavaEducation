@@ -21,6 +21,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/main_menu.fxml"));
         primaryStage.setTitle("Tic-tac-toe");
+        primaryStage.setResizable(false);
 
         MainController.initialize(primaryStage);
         primaryStage.setScene(new Scene(root, 300, 275));
