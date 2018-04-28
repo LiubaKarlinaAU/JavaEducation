@@ -2,6 +2,8 @@ package ru.spbau.karlina.ftp;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Client {
     private Socket socket;
@@ -23,16 +25,18 @@ public class Client {
             os.flush();
 
             if (type == RequestType.FILES_LIST) {
-                getFiles(fileName);
+                getDirectoryList();
             } else if (type == RequestType.FILES_CONTENT) {
                 getFileContent(fileName);
+            } else {
+                System.out.println("Incorrect request type.");
             }
         } catch (IOException e) {
             /**Note somehow */
         }
     }
 
-    private void getFiles(String fileName) {
+    private void getDirectoryList() {
         try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
             int size = dataInputStream.readInt();
@@ -48,23 +52,32 @@ public class Client {
                     } else {
                         count = dataInputStream.read(buffer, 0, length);
                     }
-                    builder.append(new String(buffer,0, count,  "UTF-8"));
+                    builder.append(new String(buffer, 0, count, "UTF-8"));
                     length -= count;
 
                 }
-boolean is_dir = dataInputStream.readBoolean();
-                //String answer = new String(bytes, "UTF-8");
+                boolean is_dir = dataInputStream.readBoolean();
                 System.out.println(builder.toString() + " (" + (is_dir ? "directory" : "file") + ")");
             }
         } catch (Exception e) {
-            Throwable ex = e.getCause();
-
             e.printStackTrace();
         }
 
     }
 
     private void getFileContent(String fileName) {
+        try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
+        ) {
+            long size = dataInputStream.readLong();
+            byte buffer[] = new byte[BUFFER_SIZE];
+            if (size > 0)
+                System.out.println("size of file is " + size);
 
+            while (dataInputStream.read(buffer) != -1) {
+                System.out.print(buffer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

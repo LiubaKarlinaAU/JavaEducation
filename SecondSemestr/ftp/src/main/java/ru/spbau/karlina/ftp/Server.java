@@ -3,6 +3,9 @@ package ru.spbau.karlina.ftp;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class Server {
@@ -27,9 +30,9 @@ public class Server {
                     dataInputStream.read(bytes);
                     String path = new String(bytes, "UTF-8");
                     if (type == RequestType.FILES_LIST) {
-                        list(path, dataOutputStream);
+                        listDirectoryContent(path, dataOutputStream);
                     } else {
-                        get(path, dataOutputStream);
+                        getFileContent(path, dataOutputStream);
                     }
                 } catch (Exception e) {
                     logger.info("Problem after making conection.");
@@ -40,34 +43,10 @@ public class Server {
             logger.info("Can't use " + PORT + " port.");
         }
 
+
     }
-/*
-    public Server() throws IOException {
-        serverSocket = new ServerSocket(4444);
-    }*/
-/*
-    public void run() {
-        try (Socket socket = serverSocket.accept()) {
-            InputStream is = socket.getInputStream();
-            DataInputStream dataInputStream = new DataInputStream(is);
-            int id = dataInputStream.readInt();
-            int length = dataInputStream.readInt();
-            byte bytes[] = new byte[length];
-            dataInputStream.read(bytes);
-            String path = new String(bytes, "UTF-8");
-            if (id == 1) {
-                list(path);
-            } else {
-                get(path);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-    }*/
-
-    private void list(String path, DataOutputStream out) throws IOException {
-        StringBuilder builder = new StringBuilder();
+    private void listDirectoryContent(String path, DataOutputStream out) throws IOException {
         File file = new File(path);
 
         if (file == null || !file.isDirectory()) {
@@ -84,23 +63,19 @@ public class Server {
         }
     }
 
-    private void findAllFiles(File current, StringBuilder prefix, StringBuilder builder) {
-        if (current.isDirectory()) {
-            for (File subFile : current.listFiles()) {
-                prefix.append('/' + subFile.getName());
-                findAllFiles(subFile, prefix, builder);
-                prefix.setLength(prefix.lastIndexOf("/"));
-            }
-        } else {
-            builder.append(prefix.toString() + "\n");
-        }
-    }
+    private void getFileContent(String path, DataOutputStream dataOutputStream) throws IOException {
+        File file = new File(path);
 
-    private void get(String path, DataOutputStream out) throws IOException {
-        String str = "Hello.This is get method";
-        logger.info(str);
-        out.writeInt(str.getBytes().length);
-        out.write(str.getBytes());
-        out.flush();
+        if (file == null || file.isDirectory()) {
+            dataOutputStream.writeInt(0);
+            return;
+        }
+
+        dataOutputStream.writeLong(file.length());
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNextLine()) {
+            dataOutputStream.write(scanner.nextLine().getBytes());
+        }
+        dataOutputStream.flush();
     }
 }
