@@ -58,6 +58,7 @@ public class ClientTest {
         server.interrupt();
         String expected = "firstDir (directory)\n" + "first.txt (file)";
         assertEquals(expected, outContent.toString().trim());
+
     }
 
     /** Simple test on Client RequestType.FILE_CONTENT request*/

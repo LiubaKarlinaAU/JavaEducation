@@ -28,7 +28,7 @@ public class Server {
                         DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream())
                 ) {
                     RequestType type = RequestType.values()[dataInputStream.readInt()];
-                    logger.info(type + " read");
+                    logger.info("server get " + type + " request");
                     int length = dataInputStream.readInt();
                     byte bytes[] = new byte[length];
                     dataInputStream.read(bytes);
