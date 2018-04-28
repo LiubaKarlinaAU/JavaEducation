@@ -1,22 +1,26 @@
 package ru.spbau.karlina.ftp;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+/**
+ * Server program representation that can do listing of directory and file content showing.
+ */
 public class Server {
     private Logger logger = Logger.getGlobal();
     private final int PORT = 4444;
-    private boolean hasStarted = false;
 
+    /**
+     * Listens the port to make connection with client.
+     */
     public void run() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)){
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             logger.info("Server has started.");
-            hasStarted = true;
             while (!Thread.interrupted()) {
                 try (
                         Socket clientSocket = serverSocket.accept();
@@ -46,7 +50,11 @@ public class Server {
 
     }
 
-    private void listDirectoryContent(String path, DataOutputStream out) throws IOException {
+    /**
+     * Made directory listing and write it to the socket DataOutputStream
+     * If given name isn't a directory writes 0 to the output stream.
+     */
+    private void listDirectoryContent(@NotNull String path, @NotNull DataOutputStream out) throws IOException {
         File file = new File(path);
 
         if (file == null || !file.isDirectory()) {
@@ -63,8 +71,12 @@ public class Server {
         }
     }
 
-    private void getFileContent(String path, DataOutputStream dataOutputStream) throws IOException {
-        File file = new File(path);
+    /**
+     * Write file content to the socket DataOutputStream.
+     * If there isn't file with such name writes 0 to the output stream.
+     */
+    private void getFileContent(@NotNull String fileName, @NotNull DataOutputStream dataOutputStream) throws IOException {
+        File file = new File(fileName);
 
         if (file == null || file.isDirectory()) {
             dataOutputStream.writeInt(0);

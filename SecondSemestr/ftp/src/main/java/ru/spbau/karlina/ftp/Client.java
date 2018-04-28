@@ -1,15 +1,24 @@
 package ru.spbau.karlina.ftp;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
+/**
+ * Client representation that can send 2 type of request to server.
+ */
 public class Client {
     private Socket socket;
     private final int BUFFER_SIZE = 2048;
 
-    public Client(String host, int port) {
+    /**
+     * Set up settings to make connection with server.
+     *
+     * @param host - server IP address.
+     * @ port - server port.
+     */
+    public Client(@NotNull String host, int port) {
         try {
             socket = new Socket(host, port);
         } catch (IOException e) {
@@ -17,7 +26,13 @@ public class Client {
         }
     }
 
-    public void request(RequestType type, String fileName) {
+    /**
+     * Realizes sending request to server and gets back answer.
+     *
+     * @param type     - type of request: RequestType.FILES_LIST or RequestType.FILE_CONTENT.
+     * @param fileName - to use in request.
+     */
+    public void request(@NotNull RequestType type, @NotNull String fileName) {
         try (DataOutputStream os = new DataOutputStream(socket.getOutputStream())) {
             os.writeInt(type.ordinal());
             os.writeInt(fileName.getBytes().length);
@@ -26,7 +41,7 @@ public class Client {
 
             if (type == RequestType.FILES_LIST) {
                 getDirectoryList();
-            } else if (type == RequestType.FILES_CONTENT) {
+            } else if (type == RequestType.FILE_CONTENT) {
                 getFileContent(fileName);
             } else {
                 System.out.println("Incorrect request type.");
@@ -36,6 +51,9 @@ public class Client {
         }
     }
 
+    /**
+     * Handles server answer after RequestType.FILES_LIST request.
+     */
     private void getDirectoryList() {
         try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
@@ -65,7 +83,10 @@ public class Client {
 
     }
 
-    private void getFileContent(String fileName) {
+    /**
+     * Handles server answer after RequestType.FILE_CONTENT request.
+     */
+    private void getFileContent(@NotNull String fileName) {
         try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
             long size = dataInputStream.readLong();

@@ -33,7 +33,7 @@ public class ClientTest {
 
 
     //@BeforeEach
-    public Thread runServer(){
+    public Thread runServer() {
         Thread serverThread = new Thread(() -> {
             Server server = new Server();
             try {
@@ -48,24 +48,25 @@ public class ClientTest {
         return serverThread;
     }
 
-
+    /** Simple test on Client RequestType.FILES_LIST request*/
     @Test
     public void getFileTest1() throws Exception {
         Thread server = runServer();
         Client client = new Client("localhost", 4444);
 
-        client.request(RequestType.FILES_LIST,dirName);
+        client.request(RequestType.FILES_LIST, dirName);
         server.interrupt();
         String expected = "firstDir (directory)\n" + "first.txt (file)";
         assertEquals(expected, outContent.toString().trim());
     }
 
+    /** Simple test on Client RequestType.FILE_CONTENT request*/
     @Test
-    public void getSocketPort() throws Exception {
+    public void getFileContentTest() throws Exception {
         Thread server = runServer();
         Client client = new Client("localhost", 4444);
 
-        client.request(RequestType.FILES_CONTENT, fileName);
+        client.request(RequestType.FILE_CONTENT, fileName);
         server.interrupt();
         assertTrue(outContent.toString().trim().startsWith("size of file is 14\n"));
 
