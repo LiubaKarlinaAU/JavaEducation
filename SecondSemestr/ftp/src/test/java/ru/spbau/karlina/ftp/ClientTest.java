@@ -5,10 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -16,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 
 public class ClientTest {
     private final static String LOCALHOST = "localhost";
-    private final String dirName = "/home/liuba/Second_Year/JavaEducation/SecondSemestr/ftp/src/test/resources";
-    private final String fileName = "/home/liuba/Second_Year/JavaEducation/SecondSemestr/ftp/src/test/resources/first.txt";
+    private final String dirName = "./src/test/resources";
+    private final String fileName = "./src/test/resources/first.txt";
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
@@ -52,7 +49,7 @@ public class ClientTest {
     @Test
     public void getFileTest1() throws Exception {
         Thread server = runServer();
-        Client client = new Client("localhost", 4444);
+        Client client = new Client(LOCALHOST, 4444);
 
         client.request(RequestType.FILES_LIST, dirName);
         server.interrupt();
@@ -65,11 +62,12 @@ public class ClientTest {
     @Test
     public void getFileContentTest() throws Exception {
         Thread server = runServer();
-        Client client = new Client("localhost", 4444);
+        Client client = new Client(LOCALHOST, 4444);
 
         client.request(RequestType.FILE_CONTENT, fileName);
         server.interrupt();
         assertTrue(outContent.toString().trim().startsWith("size of file is 14\n"));
 
     }
+
 }
