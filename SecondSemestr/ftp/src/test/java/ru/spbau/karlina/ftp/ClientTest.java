@@ -3,34 +3,33 @@ package ru.spbau.karlina.ftp;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.io.*;
-
+import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 public class ClientTest {
     private final static String LOCALHOST = "localhost";
+    private final int PORT = 40444;
+    private Thread serverThread;
     private final String dirName = "./src/test/resources";
-    private final String fileName = "./src/test/resources/first.txt";
-
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final String firstFileName = "./src/test/resources/first.txt";
+    private final String secondFileName = "./src/test/resources/firstDir/second.txt";
 
     @Before
-    public void setOutStream() {
-        System.setOut(new PrintStream(outContent));
+    public void setOutStream() throws InterruptedException {
+        serverThread = runServer();
+        Thread.sleep(500);
     }
 
     @After
-    public void cleanOutStream() {
-        System.setOut(null);
+    public void cleanOutStream() throws InterruptedException {
+        serverThread.interrupt();
+        Thread.sleep(500);
     }
 
-
-    //@BeforeEach
-    public Thread runServer() {
+    private Thread runServer() {
         Thread serverThread = new Thread(() -> {
             Server server = new Server();
             try {
@@ -45,30 +44,44 @@ public class ClientTest {
         return serverThread;
     }
 
-    /** Simple test on Client RequestType.FILES_LIST request*/
+    /**
+     * Simple test on Client RequestType.FILES_LIST request
+     */
     @Test
     public void getFileTest1() throws Exception {
-        Thread server = runServer();
-        Client client = new Client(LOCALHOST, 4444);
+        Client client = new Client(LOCALHOST, PORT);
 
-        client.request(RequestType.FILES_LIST, dirName);
-        server.interrupt();
-        String expected = "firstDir (directory)\n" + "first.txt (file)";
-        server.join();
-        assertEquals(expected, outContent.toString().trim());
+        ArrayList<String> list = client.getDirectoryList(dirName);
+        String expected0 = "firstDir (directory)";
+        String expected1 = "first.txt (file)";
+        assertEquals(expected0, list.get(0));
+        assertEquals(expected1, list.get(1));
 
     }
 
-    /** Simple test on Client RequestType.FILE_CONTENT request*/
+    /**
+     * Simple test on Client RequestType.FILE_CONTENT request
+     */
     @Test
-    public void getFileContentTest() throws Exception {
-        Thread server = runServer();
-        Client client = new Client(LOCALHOST, 4444);
-
-        client.request(RequestType.FILE_CONTENT, fileName);
-        server.interrupt();
-        assertTrue(outContent.toString().trim().startsWith("size of file is 14\n"));
-
+    public void getFileContentTest1() throws Exception {
+        Client client = new Client(LOCALHOST, PORT);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        long size = client.getFileContent(firstFileName, outputStream);
+        assertEquals(4, size);
+        assertEquals(outputStream.toString().trim(), "1234");
     }
+
+    /**
+     * Simple test on Client RequestType.FILE_CONTENT request
+     */
+    @Test
+    public void getFileContentTest2() throws Exception {
+        Client client = new Client(LOCALHOST, PORT);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        long size = client.getFileContent(secondFileName, outputStream);
+        assertEquals(10, size);
+        assertEquals(outputStream.toString().trim(), "la la land");
+    }
+
 
 }

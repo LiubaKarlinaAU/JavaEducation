@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class Server {
     private Logger logger = Logger.getGlobal();
-    private final int PORT = 4444;
+    private final int PORT = 40444;
 
     /**
      * Listens the port to make connection with client.
@@ -23,29 +23,24 @@ public class Server {
             logger.info("Server has started.");
             serverSocket.setSoTimeout(1500);
             while (!Thread.interrupted()) {
-                try (
-                        Socket clientSocket = serverSocket.accept();
+                try (Socket clientSocket = serverSocket.accept();
                         DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-                        DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream())
-                ) {
+                        DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream())) {
                     RequestType type = RequestType.values()[dataInputStream.readInt()];
                     logger.info("server get " + type + " request");
-                    int length = dataInputStream.readInt();
-                    byte bytes[] = new byte[length];
-                    dataInputStream.read(bytes);
-                    String path = new String(bytes, "UTF-8");
+                    String path = dataInputStream.readUTF();
                     if (type == RequestType.FILES_LIST) {
                         listDirectoryContent(path, dataOutputStream);
                     } else {
                         getFileContent(path, dataOutputStream);
                     }
                 } catch (Exception e) {
-                    logger.info("Problem after making conection.");
+                    logger.info("Problem after making connection.");
                 }
             }
             logger.info("Server finished.");
         } catch (Exception e) {
-            logger.info("Can't use " + PORT + " port.");
+            logger.info("Can't use " + PORT + " port. " + e.getMessage());
         }
 
 
@@ -66,10 +61,10 @@ public class Server {
         out.writeInt(file.listFiles().length);
         for (File subFile : file.listFiles()) {
             String fileName = subFile.getName();
-            out.writeInt(fileName.getBytes().length);
-            out.write(fileName.getBytes());
+            out.writeUTF(fileName);
             out.writeBoolean(subFile.isDirectory());
         }
+        out.flush();
     }
 
     /**

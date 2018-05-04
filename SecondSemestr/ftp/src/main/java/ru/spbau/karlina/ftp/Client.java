@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Client representation that can send 2 type of request to server.
@@ -25,86 +26,64 @@ public class Client {
     }
 
     /**
-     * Realizes sending request to server and gets back answer.
+     * Sends RequestType.FILES_LIST request to server handles server answer.
      *
-     * @param type     - type of request: RequestType.FILES_LIST or RequestType.FILE_CONTENT.
-     * @param fileName - to use in request.
+     * @param dirName - path to directory.
+     * @return list of files and directory in given catalog
      */
-    public void request(@NotNull RequestType type, @NotNull String fileName) {
-        try (Socket socket = new Socket(host, port)) {
-            try (DataOutputStream os = new DataOutputStream(socket.getOutputStream())) {
-                os.writeInt(type.ordinal());
-                os.writeInt(fileName.getBytes().length);
-                os.write(fileName.getBytes());
-                os.flush();
+    public ArrayList<String> getDirectoryList(@NotNull String dirName) {
+        ArrayList<String> list = new ArrayList<>();
+        try (Socket socket = new Socket(host, port);
+             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream())) {
 
-                if (type == RequestType.FILES_LIST) {
-                    getDirectoryList(socket);
-                } else if (type == RequestType.FILE_CONTENT) {
-                    getFileContent(socket);
-                } else {
-                    System.out.println("Incorrect request type.");
-                }
-            } catch (IOException e) {
-                /**Note somehow */
-            }
-        } catch (Exception e) {
-            /**Note somehow*/
-        }
-    }
+            dataOutputStream.writeInt(RequestType.FILES_LIST.ordinal());
+            dataOutputStream.writeUTF(dirName);
+            dataOutputStream.flush();
 
-    /**
-     * Handles server answer after RequestType.FILES_LIST request.
-     *
-     * @param socket - to take input stream
-     */
-    private void getDirectoryList(@NotNull Socket socket) {
-        try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
-        ) {
             int size = dataInputStream.readInt();
-            byte buffer[] = new byte[BUFFER_SIZE];
 
             for (int i = 0; i < size; ++i) {
-                int length = dataInputStream.readInt();
-                int count;
-                StringBuilder builder = new StringBuilder();
-                while (length > 0) {
-                    if (length > BUFFER_SIZE) {
-                        count = dataInputStream.read(buffer);
-                    } else {
-                        count = dataInputStream.read(buffer, 0, length);
-                    }
-                    builder.append(new String(buffer, 0, count, "UTF-8"));
-                    length -= count;
-
-                }
+                String string = dataInputStream.readUTF();
                 boolean is_dir = dataInputStream.readBoolean();
-                System.out.println(builder.toString() + " (" + (is_dir ? "directory" : "file") + ")");
+                list.add(string + " (" + (is_dir ? "directory" : "file") + ")");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+        } catch (IOException e) {
+            System.out.println("In getDirectoryList is a problem: " + e.getMessage());
+        }
+        return list;
     }
 
     /**
-     * Handles server answer after RequestType.FILE_CONTENT request.
+     * Sends RequestType.FILE_CONTENT request to server and handles answer.
      *
-     * @param socket - to take input stream
+     * @param fileName - name of file for loading.
+     * @param output   - stream to save file
+     * @return size of file
      */
-    private void getFileContent(@NotNull Socket socket) {
-        try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
-        ) {
-            long size = dataInputStream.readLong();
+    public long getFileContent(@NotNull String fileName, OutputStream output) {
+        long size = 0;
+        try (Socket socket = new Socket(host, port);
+             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream())) {
+
+            dataOutputStream.writeInt(RequestType.FILE_CONTENT.ordinal());
+            dataOutputStream.writeUTF(fileName);
+            dataOutputStream.flush();
+
+            size = dataInputStream.readLong();
             byte buffer[] = new byte[BUFFER_SIZE];
-            if (size > 0)
-                System.out.println("size of file is " + size);
 
             while (dataInputStream.read(buffer) != -1) {
-                System.out.print(buffer);
+                output.write(buffer);
             }
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("In getFileContent is a problem: " + e.getMessage());
         }
+
+        return size;
     }
+
 }
