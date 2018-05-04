@@ -9,21 +9,19 @@ import java.net.Socket;
  * Client representation that can send 2 type of request to server.
  */
 public class Client {
-    private Socket socket;
+    private String host;
+    private int port;
     private final int BUFFER_SIZE = 2048;
 
     /**
      * Set up settings to make connection with server.
      *
      * @param host - server IP address.
-     * @ port - server port.
+     * @param port - server port.
      */
     public Client(@NotNull String host, int port) {
-        try {
-            socket = new Socket(host, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.host = host;
+        this.port = port;
     }
 
     /**
@@ -33,28 +31,34 @@ public class Client {
      * @param fileName - to use in request.
      */
     public void request(@NotNull RequestType type, @NotNull String fileName) {
-        try (DataOutputStream os = new DataOutputStream(socket.getOutputStream())) {
-            os.writeInt(type.ordinal());
-            os.writeInt(fileName.getBytes().length);
-            os.write(fileName.getBytes());
-            os.flush();
+        try (Socket socket = new Socket(host, port)) {
+            try (DataOutputStream os = new DataOutputStream(socket.getOutputStream())) {
+                os.writeInt(type.ordinal());
+                os.writeInt(fileName.getBytes().length);
+                os.write(fileName.getBytes());
+                os.flush();
 
-            if (type == RequestType.FILES_LIST) {
-                getDirectoryList();
-            } else if (type == RequestType.FILE_CONTENT) {
-                getFileContent(fileName);
-            } else {
-                System.out.println("Incorrect request type.");
+                if (type == RequestType.FILES_LIST) {
+                    getDirectoryList(socket);
+                } else if (type == RequestType.FILE_CONTENT) {
+                    getFileContent(socket);
+                } else {
+                    System.out.println("Incorrect request type.");
+                }
+            } catch (IOException e) {
+                /**Note somehow */
             }
-        } catch (IOException e) {
-            /**Note somehow */
+        } catch (Exception e) {
+            /**Note somehow*/
         }
     }
 
     /**
      * Handles server answer after RequestType.FILES_LIST request.
+     *
+     * @param socket - to take input stream
      */
-    private void getDirectoryList() {
+    private void getDirectoryList(@NotNull Socket socket) {
         try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
             int size = dataInputStream.readInt();
@@ -85,8 +89,10 @@ public class Client {
 
     /**
      * Handles server answer after RequestType.FILE_CONTENT request.
+     *
+     * @param socket - to take input stream
      */
-    private void getFileContent(@NotNull String fileName) {
+    private void getFileContent(@NotNull Socket socket) {
         try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
             long size = dataInputStream.readLong();

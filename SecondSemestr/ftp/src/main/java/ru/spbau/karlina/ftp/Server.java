@@ -21,6 +21,7 @@ public class Server {
     public void run() throws IOException {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             logger.info("Server has started.");
+            serverSocket.setSoTimeout(1500);
             while (!Thread.interrupted()) {
                 try (
                         Socket clientSocket = serverSocket.accept();

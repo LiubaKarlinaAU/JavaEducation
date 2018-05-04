@@ -54,6 +54,7 @@ public class ClientTest {
         client.request(RequestType.FILES_LIST, dirName);
         server.interrupt();
         String expected = "firstDir (directory)\n" + "first.txt (file)";
+        server.join();
         assertEquals(expected, outContent.toString().trim());
 
     }
