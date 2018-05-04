@@ -17,9 +17,7 @@ import java.io.IOException;
 /**Main class to extends Application and initialize MainController*/
 public class Main extends Application {
     private GridPane grid = new GridPane();
-    //private Field field = new Field();
     private static Model model;
-    //private static final Duration waitingTime =  Duration.ofSeconds(1);
     private Button[][] buttons;
 
     /**
@@ -75,7 +73,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        int size = 4; //Integer.parseInt(args[0]);
+        int size = Integer.parseInt(args[0]);
         if (size <= 0 || size % 2 != 0) {
             System.out.println("Incorrect size of grid.");
         }
