@@ -6,8 +6,10 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class ClientTest {
@@ -53,13 +55,15 @@ public class ClientTest {
     @Test
     public void getFileTest1() throws Exception {
         Client client = new Client(LOCALHOST, PORT);
-
         ArrayList<String> list = client.getDirectoryList(firstDirName);
-        String expected0 = "firstDir (directory)";
-        String expected1 = "first.txt (file)";
-        assertEquals(expected0, list.get(0));
-        assertEquals(expected1, list.get(1));
-
+        HashSet<String> expected = new HashSet<>();
+        String first = "firstDir (directory)";
+        String second = "first.txt (file)";
+        expected.add(first);
+        expected.add(second);
+        assertEquals(2, list.size());
+        assertTrue(expected.contains(list.get(0)));
+        assertTrue(expected.contains(list.get(1)));
     }
 
     /**
@@ -68,13 +72,15 @@ public class ClientTest {
     @Test
     public void getFileTest2() throws Exception {
         Client client = new Client(LOCALHOST, PORT);
-
         ArrayList<String> list = client.getDirectoryList(secondDirName);
-        String expected0 = "second.txt (file)";
-        String expected1 = "third.txt (file)";
+        HashSet<String> expected = new HashSet<>();
+        String first = "second.txt (file)";
+        String second = "third.txt (file)";
+        expected.add(first);
+        expected.add(second);
         assertEquals(2, list.size());
-        assertEquals(expected0, list.get(0));
-        assertEquals(expected1, list.get(1));
+        assertTrue(expected.contains(list.get(0)));
+        assertTrue(expected.contains(list.get(1)));
 
     }
 
