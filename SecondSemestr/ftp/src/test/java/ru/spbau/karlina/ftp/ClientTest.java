@@ -28,6 +28,7 @@ public class ClientTest {
     @After
     public void cleanOutStream() throws InterruptedException {
         serverThread.interrupt();
+        serverThread.join();
         Thread.sleep(500);
     }
 
