@@ -24,8 +24,8 @@ public class Server {
             serverSocket.setSoTimeout(1500);
             while (!Thread.interrupted()) {
                 try (Socket clientSocket = serverSocket.accept();
-                        DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-                        DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream())) {
+                     DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+                     DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream())) {
                     RequestType type = RequestType.values()[dataInputStream.readInt()];
                     logger.info("server get " + type + " request");
                     String path = dataInputStream.readUTF();

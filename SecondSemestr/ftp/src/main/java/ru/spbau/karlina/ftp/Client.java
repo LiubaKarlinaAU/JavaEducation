@@ -31,6 +31,7 @@ public class Client {
      * @param dirName - path to directory.
      * @return list of files and directory in given catalog
      */
+    @NotNull
     public ArrayList<String> getDirectoryList(@NotNull String dirName) {
         ArrayList<String> list = new ArrayList<>();
         try (Socket socket = new Socket(host, port);
@@ -62,7 +63,7 @@ public class Client {
      * @param output   - stream to save file
      * @return size of file
      */
-    public long getFileContent(@NotNull String fileName, OutputStream output) {
+    public long getFileContent(@NotNull String fileName, @NotNull OutputStream output) {
         long size = 0;
         try (Socket socket = new Socket(host, port);
              DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
