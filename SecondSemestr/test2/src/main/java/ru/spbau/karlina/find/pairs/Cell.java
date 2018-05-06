@@ -37,6 +37,7 @@ public class Cell {
 
     /**
      * Set new cell state
+     *
      * @param newState - to be set
      */
     public void setState(CellStates newState) {

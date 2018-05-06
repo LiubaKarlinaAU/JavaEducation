@@ -2,17 +2,12 @@ package ru.spbau.karlina.find.pairs;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
-import org.reactfx.*;
 
 
 public class Model {
@@ -79,11 +74,11 @@ public class Model {
                 } else {
                     Timeline timeline = new Timeline(new KeyFrame(
                             javafx.util.Duration.millis(1000), ae -> {
-                            button.setText("*");
-                            choosenButton.setText("*");
-                            greed[i][j].setState(CellStates.HIDDEN);
-                            greed[choosenX][choosenY].setState(CellStates.HIDDEN);
-                        }));
+                        button.setText("*");
+                        choosenButton.setText("*");
+                        greed[i][j].setState(CellStates.HIDDEN);
+                        greed[choosenX][choosenY].setState(CellStates.HIDDEN);
+                    }));
                     timeline.play();
                     greed[i][j].setState(CellStates.CHOOSEN);
                     button.fire();
