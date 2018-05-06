@@ -31,6 +31,12 @@
             <artifactId>annotations</artifactId>
             <version>13.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.reactfx</groupId>
+            <artifactId>reactfx</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -36,9 +36,11 @@ public class Cell {
     }
 
     /**
-     * Set cell state OPEN
+     * Set new cell state
+     *
+     * @param newState - to be set
      */
-    public void setOpenState() {
-        state = CellStates.OPEN;
+    public void setState(CellStates newState) {
+        state = newState;
     }
 }
