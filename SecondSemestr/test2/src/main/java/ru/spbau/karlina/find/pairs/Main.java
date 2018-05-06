@@ -79,11 +79,6 @@ public class Main extends Application {
 
     }
 
-    /** Destroy application */
-    public static void destroy() {
-        Platform.exit();
-    }
-
     private Button newButton(int i, int j) {
         Button button = new Button();
         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
