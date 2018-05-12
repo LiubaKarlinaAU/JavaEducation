@@ -1,5 +1,6 @@
 package ru.spbau.karlina.ftp;
 
+import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -29,11 +30,12 @@ public class Client {
      * Sends RequestType.FILES_LIST request to server handles server answer.
      *
      * @param dirName - path to directory.
-     * @return list of files and directory in given catalog
+     * @return list of pairs: name of content in given catalog and
+     *         true if it directory and false if it file
      */
     @NotNull
-    public ArrayList<String> getDirectoryList(@NotNull String dirName) {
-        ArrayList<String> list = new ArrayList<>();
+    public ArrayList<Pair<String, Boolean>> getDirectoryList(@NotNull String dirName) {
+        ArrayList<Pair<String, Boolean>> list = new ArrayList<>();
         try (Socket socket = new Socket(host, port);
              DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
              DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream())) {
@@ -47,7 +49,7 @@ public class Client {
             for (int i = 0; i < size; ++i) {
                 String string = dataInputStream.readUTF();
                 boolean is_dir = dataInputStream.readBoolean();
-                list.add(string + " (" + (is_dir ? "directory" : "file") + ")");
+                list.add(new Pair (string, is_dir));
             }
 
         } catch (IOException e) {

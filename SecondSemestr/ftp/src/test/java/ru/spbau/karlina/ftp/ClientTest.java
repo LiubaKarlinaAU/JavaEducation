@@ -1,5 +1,6 @@
 package ru.spbau.karlina.ftp;
 
+import javafx.util.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,12 +56,12 @@ public class ClientTest {
     @Test
     public void getFileTest1() throws Exception {
         Client client = new Client(LOCALHOST, PORT);
-        ArrayList<String> list = client.getDirectoryList(firstDirName);
-        HashSet<String> expected = new HashSet<>();
-        String first = "firstDir (directory)";
-        String second = "first.txt (file)";
-        expected.add(first);
-        expected.add(second);
+        ArrayList<Pair<String, Boolean>> list = client.getDirectoryList(firstDirName);
+        HashSet<Pair<String, Boolean>> expected = new HashSet<>();
+        String first = "firstDir";
+        String second = "first.txt";
+        expected.add(new Pair(first, true));
+        expected.add(new Pair<>(second, false));
         assertEquals(2, list.size());
         assertTrue(expected.contains(list.get(0)));
         assertTrue(expected.contains(list.get(1)));
@@ -72,12 +73,12 @@ public class ClientTest {
     @Test
     public void getFileTest2() throws Exception {
         Client client = new Client(LOCALHOST, PORT);
-        ArrayList<String> list = client.getDirectoryList(secondDirName);
-        HashSet<String> expected = new HashSet<>();
-        String first = "second.txt (file)";
-        String second = "third.txt (file)";
-        expected.add(first);
-        expected.add(second);
+        ArrayList<Pair<String, Boolean>> list = client.getDirectoryList(secondDirName);
+        HashSet<Pair<String, Boolean>> expected = new HashSet<>();
+        String first = "second.txt";
+        String second = "third.txt";
+        expected.add(new Pair<>(first, false));
+        expected.add(new Pair<>(second, false));
         assertEquals(2, list.size());
         assertTrue(expected.contains(list.get(0)));
         assertTrue(expected.contains(list.get(1)));
