@@ -10,20 +10,24 @@ import java.util.ArrayList;
 /**
  * Client representation that can send 2 type of request to server.
  */
-public class Client {
-    private String host;
-    private int port;
+public class Client implements AutoCloseable {
+    private final DataOutputStream dataOutputStream;
+    private final Socket socket;
+    private final DataInputStream dataInputStream;
     private final int BUFFER_SIZE = 2048;
 
     /**
-     * Set up settings to make connection with server.
+     * Create socket to make connection with server.
      *
      * @param host - server IP address.
      * @param port - server port.
+     *
+     * @throws IOException - if there is problem with creating streams.
      */
-    public Client(@NotNull String host, int port) {
-        this.host = host;
-        this.port = port;
+    public Client(@NotNull String host, int port) throws IOException {
+        socket = new Socket(host, port);
+        dataInputStream = new DataInputStream(socket.getInputStream());
+        dataOutputStream = new DataOutputStream(socket.getOutputStream());
     }
 
     /**
@@ -31,30 +35,26 @@ public class Client {
      *
      * @param dirName - path to directory.
      * @return list of pairs: name of content in given catalog and
-     *         true if it directory and false if it file
+     * true if it directory and false if it file
+     *
+     * @throws IOException - if there is problem with reading from stream or writing to stream.
      */
     @NotNull
-    public ArrayList<Pair<String, Boolean>> getDirectoryList(@NotNull String dirName) {
+    public ArrayList<Pair<String, Boolean>> getDirectoryList(@NotNull String dirName) throws IOException {
         ArrayList<Pair<String, Boolean>> list = new ArrayList<>();
-        try (Socket socket = new Socket(host, port);
-             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream())) {
 
-            dataOutputStream.writeInt(RequestType.FILES_LIST.ordinal());
-            dataOutputStream.writeUTF(dirName);
-            dataOutputStream.flush();
+        dataOutputStream.writeInt(RequestType.FILES_LIST.ordinal());
+        dataOutputStream.writeUTF(dirName);
+        dataOutputStream.flush();
 
-            int size = dataInputStream.readInt();
+        int size = dataInputStream.readInt();
 
-            for (int i = 0; i < size; ++i) {
-                String string = dataInputStream.readUTF();
-                boolean is_dir = dataInputStream.readBoolean();
-                list.add(new Pair (string, is_dir));
-            }
-
-        } catch (IOException e) {
-            System.out.println("In getDirectoryList is a problem: " + e.getMessage());
+        for (int i = 0; i < size; ++i) {
+            String string = dataInputStream.readUTF();
+            boolean is_dir = dataInputStream.readBoolean();
+            list.add(new Pair(string, is_dir));
         }
+
         return list;
     }
 
@@ -62,31 +62,38 @@ public class Client {
      * Sends RequestType.FILE_CONTENT request to server and handles answer.
      *
      * @param fileName - name of file for loading.
-     * @param output   - stream to save file
-     * @return size of file
+     * @param output   - stream to save file.
+     *
+     * @throws IOException - if there is problem with reading from stream or writing to stream.
      */
-    public long getFileContent(@NotNull String fileName, @NotNull OutputStream output) {
-        long size = 0;
-        try (Socket socket = new Socket(host, port);
-             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream())) {
+    public void getFileContent(@NotNull String fileName, @NotNull OutputStream output) throws IOException {
+        long size;
 
-            dataOutputStream.writeInt(RequestType.FILE_CONTENT.ordinal());
-            dataOutputStream.writeUTF(fileName);
-            dataOutputStream.flush();
+        dataOutputStream.writeInt(RequestType.FILE_CONTENT.ordinal());
+        dataOutputStream.writeUTF(fileName);
+        dataOutputStream.flush();
 
-            size = dataInputStream.readLong();
-            byte buffer[] = new byte[BUFFER_SIZE];
+        size = dataInputStream.readLong();
+        byte buffer[] = new byte[BUFFER_SIZE];
+        int readedSize;
 
-            while (dataInputStream.read(buffer) != -1) {
-                output.write(buffer);
-            }
+        do {
+            readedSize = dataInputStream.read(buffer, 0, (int) Long.min(size, BUFFER_SIZE));
+            size -= readedSize;
+            output.write(buffer, 0, readedSize);
+        } while (size > 0);
 
-        } catch (IOException e) {
-            System.out.println("In getFileContent is a problem: " + e.getMessage());
-        }
-
-        return size;
     }
 
+    /**
+     * Close socket connection.
+     *
+     * @throws IOException - if there is problem with closing streams or socket
+     */
+    @Override
+    public void close() throws IOException {
+        dataInputStream.close();
+        dataOutputStream.close();
+        socket.close();
+    }
 }

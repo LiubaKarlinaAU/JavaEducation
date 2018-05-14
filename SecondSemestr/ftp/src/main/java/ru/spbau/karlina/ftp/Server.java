@@ -6,6 +6,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -14,36 +16,26 @@ import java.util.logging.Logger;
 public class Server {
     private Logger logger = Logger.getGlobal();
     private final int PORT = 40444;
+    private ExecutorService pool = Executors.newCachedThreadPool();
+
+    public static void main(String[] args) {
+        new Server().run();
+    }
 
     /**
      * Listens the port to make connection with client.
+     * For each socket make new thread
      */
-    public void run() throws IOException {
+    public void run() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             logger.info("Server has started.");
-            serverSocket.setSoTimeout(1500);
             while (!Thread.interrupted()) {
-                try (Socket clientSocket = serverSocket.accept();
-                     DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-                     DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream())) {
-                    RequestType type = RequestType.values()[dataInputStream.readInt()];
-                    logger.info("server get " + type + " request");
-                    String path = dataInputStream.readUTF();
-                    if (type == RequestType.FILES_LIST) {
-                        listDirectoryContent(path, dataOutputStream);
-                    } else {
-                        getFileContent(path, dataOutputStream);
-                    }
-                } catch (Exception e) {
-                    logger.info("Problem after making connection.");
-                }
+                Socket clientSocket = serverSocket.accept();
+                pool.submit(makeTask(clientSocket));
             }
             logger.info("Server finished.");
         } catch (Exception e) {
-            logger.info("Can't use " + PORT + " port. " + e.getMessage());
         }
-
-
     }
 
     /**
@@ -85,5 +77,32 @@ public class Server {
             dataOutputStream.write(scanner.nextLine().getBytes());
         }
         dataOutputStream.flush();
+    }
+
+    private Runnable makeTask(Socket socket) {
+        return () -> {
+            try (DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())) {
+                while (socket.isConnected()) {
+                    int tmp = dataInputStream.readInt();
+                    RequestType type = RequestType.values()[tmp];
+                    String path = dataInputStream.readUTF();
+
+                    if (type == RequestType.FILES_LIST) {
+                        listDirectoryContent(path, dataOutputStream);
+                    } else {
+                        getFileContent(path, dataOutputStream);
+                    }
+                }
+            } catch (EOFException e) {
+                logger.info("close connection");
+            } catch (IOException e) {
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
+            }
+        };
     }
 }
