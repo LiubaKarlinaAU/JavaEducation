@@ -1,9 +1,10 @@
 package ru.spbau.karlina.ftp.gui;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import ru.spbau.karlina.ftp.Client;
 import ru.spbau.karlina.ftp.Server;
@@ -31,11 +32,7 @@ public class FtpWorker {
     private Thread runServer() {
         Thread serverThread = new Thread(() -> {
             Server server = new Server();
-            try {
-                server.run();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            server.run();
         });
         serverThread.setDaemon(true);
         serverThread.start();
@@ -47,58 +44,23 @@ public class FtpWorker {
         this.gridPane = gridPane;
     }
 
-    public void run(String hostName, String dirPath) {
-        try {
-            setOutStream();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void run(String hostName, String dirPath) throws IOException {
         client = new Client(hostName, PORT);
 
         showList(client.getDirectoryList(dirPath));
-
-        try {
-            cleanOutStream();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
     
-    public void showList(@NotNull ArrayList<String> directoryList) {
+    public void showList(@NotNull ArrayList<Pair<String, Boolean>> directoryList) {
         gridPane.getChildren().clear();
 
-/*
-        // Root Item
-        TreeItem<Button> rootItem = new TreeItem<Button>(catJava);
-        rootItem.setExpanded(true);
+        ObservableList names = FXCollections.observableArrayList();
 
-        // JSP Item
-        TreeItem<Button> itemJSP = new TreeItem<Button>(catJSP);
-
-        // Spring Item
-        TreeItem<Button> itemSpring = new TreeItem<>(catSpring);
-
-        // Add to Root
-        rootItem.getChildren().addAll(itemJSP, itemSpring);
-*/
-
-        TreeItem<Button> root = new TreeItem<Button>(new Button("Root Node"));
-        //root.setExpanded(true);
-
-        for (String content : directoryList) {
-            Button button = new Button(content);
-            TreeItem<Button> treeItem = new TreeItem<>(button);
-            root.getChildren().add(treeItem);
+        for (Pair<String, Boolean> content : directoryList) {
+            names.add(content.getKey());
         }
-        /*
-        root.getChildren().addAll(
-                new TreeItem<Button>(new Button("Item 1")),
-                new TreeItem<Button>(new Button("Item 2")),
-                new TreeItem<Button>(new Button("Item 3"))
-        );*/
 
-        TreeView<Button> tree = new TreeView<Button>(root);
+        ListView<String> listview = new ListView<>(names);
 
-        gridPane.getChildren().add(tree);
+        gridPane.getChildren().add(listview);
     }
 }

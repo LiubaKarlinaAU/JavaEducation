@@ -46,7 +46,11 @@ public class FtpGui extends Application{
             public void handle(ActionEvent actionEvent) {
                 String dirPath = fieldDirPath.getText();
                 String hostName = fieldHostName.getText();
-                ftpWorker.run(hostName, dirPath);
+                try {
+                    ftpWorker.run(hostName, dirPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
