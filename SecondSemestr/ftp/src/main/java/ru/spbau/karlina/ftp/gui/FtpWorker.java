@@ -59,8 +59,21 @@ public class FtpWorker {
             names.add(content.getKey());
         }
 
-        ListView<String> listview = new ListView<>(names);
+        ListView<String> listView = new ListView<>(names);
+        listView.setOnMouseClicked(click -> {
+            if (click.getClickCount() >= 2) {
+                String item = listView.getSelectionModel().getSelectedItem();
+                if (item.endsWith("/")) {
+                    showList(item.substring(0, item.length() - 1));
+                } else {
+                    loadFile(item);
+                }
+            }
+        });
 
-        gridPane.getChildren().add(listview);
+        gridPane.getChildren().add(listView);
+    }
+
+    private void loadFile(String item) {
     }
 }
