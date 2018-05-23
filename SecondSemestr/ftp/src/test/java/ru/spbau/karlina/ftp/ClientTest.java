@@ -21,15 +21,29 @@ public class ClientTest {
     private final String firstFileName = "./src/test/resources/first.txt";
     private final String secondFileName = "./src/test/resources/firstDir/second.txt";
     private Client client;
+    private Thread serverThread;
 
     @Before
     public void setOutStream() throws InterruptedException, IOException {
+        serverThread = runServer();
+        Thread.sleep(500);
         client = new Client(LOCALHOST, PORT);
     }
 
     @After
     public void cleanOutStream() throws Exception {
         client.close();
+        serverThread.interrupt();
+    }
+
+    private Thread runServer() {
+        Thread serverThread = new Thread(() -> {
+            Server server = new Server();
+            server.run();
+        });
+        serverThread.start();
+
+        return serverThread;
     }
 
     /**
@@ -61,7 +75,6 @@ public class ClientTest {
         assertEquals(2, list.size());
         assertTrue(expected.contains(list.get(0)));
         assertTrue(expected.contains(list.get(1)));
-
     }
 
     /**
