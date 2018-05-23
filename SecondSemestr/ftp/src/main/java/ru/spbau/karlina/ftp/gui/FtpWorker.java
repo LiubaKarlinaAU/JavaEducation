@@ -12,11 +12,16 @@ import ru.spbau.karlina.ftp.Client;
 import java.io.*;
 import java.util.ArrayList;
 
-/** Special class for making representation of ftp server/client application working.*/
+/**
+ * Special class for making representation of ftp server/client application working.
+ */
 public class FtpWorker {
-    @NotNull private GridPane gridPane;
-    @NotNull private Client client;
-    @NotNull private String prev;
+    @NotNull
+    private GridPane gridPane;
+    @NotNull
+    private Client client;
+    @NotNull
+    private String prev;
     private final int PORT = 40444;
 
     /**

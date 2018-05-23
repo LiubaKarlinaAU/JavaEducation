@@ -15,8 +15,7 @@ import java.io.IOException;
  * Class is realisation of graphic interface of ftp application.
  */
 public class FtpGui extends Application {
-    @NotNull
-    private FtpWorker ftpWorker;
+    @NotNull private FtpWorker ftpWorker;
 
     public static void main(String[] args) {
         launch(args);
