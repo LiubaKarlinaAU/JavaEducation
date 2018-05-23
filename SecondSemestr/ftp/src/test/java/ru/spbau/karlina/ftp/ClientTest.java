@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 public class ClientTest {
     private final static String LOCALHOST = "localhost";
     private final int PORT = 40444;
-    private Thread serverThread;
     private final String firstDirName = "./src/test/resources";
     private final String secondDirName = "./src/test/resources/firstDir";
     private final String firstFileName = "./src/test/resources/first.txt";
@@ -25,25 +24,12 @@ public class ClientTest {
 
     @Before
     public void setOutStream() throws InterruptedException, IOException {
-        serverThread = runServer();
-        Thread.sleep(500);
         client = new Client(LOCALHOST, PORT);
     }
 
     @After
     public void cleanOutStream() throws Exception {
         client.close();
-        serverThread.interrupt();
-    }
-
-    private Thread runServer() {
-        Thread serverThread = new Thread(() -> {
-            Server server = new Server();
-            server.run();
-        });
-        serverThread.start();
-
-        return serverThread;
     }
 
     /**

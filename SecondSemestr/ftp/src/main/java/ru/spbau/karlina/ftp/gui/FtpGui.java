@@ -7,30 +7,39 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class FtpGui extends Application{
+/**
+ * Class is realisation of graphic interface of ftp application.
+ */
+public class FtpGui extends Application {
+    @NotNull
     private FtpWorker ftpWorker;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Create initial layout and ask user about server hostname.
+     *
+     * @param primaryStage - stage to work on.
+     */
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(@NotNull Stage primaryStage) throws IOException {
         GridPane root = new GridPane();
 
         root.setPadding(new Insets(20));
         root.setHgap(25);
         root.setVgap(15);
-
         root.setPrefWidth(400);
         root.setMinHeight(100);
+
         Label labelHostName = new Label("Host name");
         TextField fieldHostName = new TextField();
-
-        Button enterButton = new Button("enter");
+        Button enterButton = new Button("Enter");
 
         enterButton.setOnAction(actionEvent -> {
             String hostName = fieldHostName.getText();
@@ -43,7 +52,6 @@ public class FtpGui extends Application{
         });
 
         GridPane.setHalignment(labelHostName, HPos.RIGHT);
-
         root.add(labelHostName, 0, 1);
 
         GridPane.setHalignment(fieldHostName, HPos.LEFT);
@@ -55,9 +63,7 @@ public class FtpGui extends Application{
         primaryStage.setScene(new Scene(root, 400, 250));
         primaryStage.setMinHeight(250);
         primaryStage.setMinWidth(400);
-        primaryStage.setTitle("server client application");
+        primaryStage.setTitle("Server/client application");
         primaryStage.show();
-
-
     }
 }

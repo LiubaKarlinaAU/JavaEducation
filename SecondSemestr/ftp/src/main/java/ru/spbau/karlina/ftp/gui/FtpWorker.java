@@ -12,23 +12,73 @@ import ru.spbau.karlina.ftp.Client;
 import java.io.*;
 import java.util.ArrayList;
 
+/** Special class for making representation of ftp server/client application working.*/
 public class FtpWorker {
-    private GridPane gridPane;
-    private Client client;
+    @NotNull private GridPane gridPane;
+    @NotNull private Client client;
+    @NotNull private String prev;
     private final int PORT = 40444;
-    private String prev;
 
-    public FtpWorker(String hostName, GridPane gridPane) throws IOException {
+    /**
+     * Constructor makes setting gridPane field and create client.
+     *
+     * @param hostName - host name to create client.
+     * @param gridPane - layout to work on.
+     */
+    public FtpWorker(@NotNull String hostName, @NotNull GridPane gridPane) throws IOException {
         this.gridPane = gridPane;
         client = new Client(hostName, PORT);
     }
 
-    public void run(String dirPath) throws IOException {
+    /**
+     * Ask user directory name to make listing of it.
+     */
+    public void start() {
+        gridPane.getChildren().clear();
 
+        Label labelDirPath = new Label("Directory path");
+        TextField fieldDirPath = new TextField();
+
+        Button enterButton = new Button("Enter");
+
+        enterButton.setOnAction(actionEvent -> {
+            String dirPath = fieldDirPath.getText();
+            if (dirPath.length() != 0) {
+                prev = dirPath;
+                try {
+                    run(dirPath);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+
+        GridPane.setHalignment(labelDirPath, HPos.RIGHT);
+        gridPane.add(labelDirPath, 0, 2);
+
+        GridPane.setHalignment(fieldDirPath, HPos.LEFT);
+        gridPane.add(fieldDirPath, 1, 2);
+
+        GridPane.setHalignment(enterButton, HPos.RIGHT);
+        gridPane.add(enterButton, 1, 3);
+    }
+
+    /**
+     * Make initial directory listing request.
+     *
+     * @param dirPath - directory name to send request.
+     */
+    private void run(@NotNull String dirPath) throws IOException {
+        prev = dirPath;
         showList(client.getDirectoryList(dirPath));
     }
 
-    public void showList(@NotNull ArrayList<Pair<String, Boolean>> directoryList) {
+    /**
+     * Show list of values from given pair list.
+     *
+     * @param directoryList - to be printed on screen.
+     */
+    private void showList(@NotNull ArrayList<Pair<String, Boolean>> directoryList) {
         gridPane.getChildren().clear();
 
         ObservableList names = FXCollections.observableArrayList();
@@ -47,14 +97,13 @@ public class FtpWorker {
                 String item = listView.getSelectionModel().getSelectedItem();
                 if (item.endsWith("/")) {
                     String fileName = item.substring(0, item.length() - 1);
-                    prev = prev + fileName;
                     try {
-                        run(prev);
+                        run(prev + "/" + fileName);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                     }
                 } else {
-                    loadFile(item);
+                    getOutputFileName(item);
                 }
             }
         });
@@ -62,41 +111,18 @@ public class FtpWorker {
         gridPane.getChildren().add(listView);
     }
 
-    private void loadFile(String item) {
-        String fileName = prev + item;
-        String outputFileName = getOutputFileName();
-        try {
-            FileOutputStream stream = new FileOutputStream(outputFileName);
-            client.getFileContent(item, stream);
-/*
-            Toast = new Toast("You file " + item + " saved to " + outputFileName);
-            gridPane.add(text);
-  */
-            start();
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void start() {
+    private void getOutputFileName(String item) {
         gridPane.getChildren().clear();
 
-        Label labelDirPath = new Label("Directory path");
+        Label labelDirPath = new Label("Save file as ");
         TextField fieldDirPath = new TextField();
 
-        Button enterButton = new Button("enter");
+        Button enterButton = new Button("Enter");
 
         enterButton.setOnAction(actionEvent -> {
             String dirPath = fieldDirPath.getText();
-            prev = dirPath;
-            try {
-                run(dirPath);
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+            if (dirPath.length() != 0) {
+                loadFile(item, dirPath);
             }
         });
 
@@ -110,28 +136,14 @@ public class FtpWorker {
         gridPane.add(enterButton, 1, 3);
     }
 
-    public String getOutputFileName() {
-        gridPane.getChildren().clear();
-
-        Label labelDirPath = new Label("path where to save: ");
-        TextField fieldDirPath = new TextField();
-
-        Button enterButton = new Button("enter");
-/*
-        enterButton.setOnAction(actionEvent -> {
-            String dirPath = fieldDirPath.getText();
-            return dirPath;
-        });
-*/
-        GridPane.setHalignment(labelDirPath, HPos.RIGHT);
-        gridPane.add(labelDirPath, 0, 2);
-
-        GridPane.setHalignment(fieldDirPath, HPos.LEFT);
-        gridPane.add(fieldDirPath, 1, 2);
-
-        GridPane.setHalignment(enterButton, HPos.RIGHT);
-        gridPane.add(enterButton, 1, 3);
-
-        return "";
+    private void loadFile(String item, String outputFileName) {
+        String fileName = prev + "/" + item;
+        try (FileOutputStream stream = new FileOutputStream(outputFileName)) {
+            client.getFileContent(fileName, stream);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            start();
+        }
     }
 }
