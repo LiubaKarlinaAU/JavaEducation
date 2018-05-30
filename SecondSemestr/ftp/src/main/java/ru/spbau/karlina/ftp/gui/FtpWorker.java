@@ -96,7 +96,7 @@ public class FtpWorker {
             }
         }
 
-        ListView<String> listView = new ListView<>(names);
+        ListView<String> listView = new ListView(names);
         listView.setOnMouseClicked(click -> {
             if (click.getClickCount() >= 2) {
                 String item = listView.getSelectionModel().getSelectedItem();
@@ -121,6 +121,7 @@ public class FtpWorker {
 
         Label labelDirPath = new Label("Save file as ");
         TextField fieldDirPath = new TextField();
+        fieldDirPath.setText(item);
 
         Button enterButton = new Button("Enter");
 
