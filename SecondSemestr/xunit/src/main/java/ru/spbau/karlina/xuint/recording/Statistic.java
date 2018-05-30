@@ -17,7 +17,6 @@ public class Statistic {
      */
     public Statistic(@NotNull PrintStream stream) {
         output = stream;
-        output.println("Beginning of statistic: ");
     }
 
     /**
@@ -28,8 +27,9 @@ public class Statistic {
      * @param message  - additional information about passing.
      */
     public void addRecord(@NotNull String testName, long time, @NotNull TestResult result, @NotNull String message) {
-        output.println("Test " + testName + " has finished after " + time + "mls.");
+        output.println("Test " + testName + " has finished after " + time + " mls.");
         output.println("Result is : " + result + message);
+        output.println();
     }
 
     /**
@@ -39,5 +39,6 @@ public class Statistic {
      */
     public void addNote(@NotNull String note) {
         output.println(note);
+        output.println();
     }
 }

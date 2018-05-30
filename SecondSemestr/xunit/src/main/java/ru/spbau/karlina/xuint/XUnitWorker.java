@@ -11,14 +11,22 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+/**
+ * Class for running test with annotations.
+ */
 public class XUnitWorker {
     private static Statistic statistic = new Statistic(System.out);
     private static Method before;
     private static Method beforeClass;
     private static Method after;
     private static Method afterClass;
-    private static ArrayList<Method> tests = new ArrayList<Method>();
+    private static ArrayList<Method> tests = new ArrayList<>();
 
+    /**
+     * Run tests from given class name.
+     *
+     * @param args - should contain one string - name of class to be load.
+     */
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Write only one class name!");
@@ -37,7 +45,13 @@ public class XUnitWorker {
         runTests(testClass);
     }
 
-    private static void runTests(Class testClass) {
+
+    /**
+     * Run tests from given class.
+     *
+     * @param testClass - class with tests to be run.
+     */
+    public static void runTests(Class testClass) {
         tests = new ArrayList<>();
         before = null;
         beforeClass = null;
@@ -86,23 +100,27 @@ public class XUnitWorker {
         }
     }
 
-    private static void runTest(Object instance, Method test) {
-        long startTime = System.currentTimeMillis();
+    private static void runTest(Object instance, Method test) throws XUnitException {
+        Test testAnnotation = test.getAnnotation(Test.class);
+        if (!testAnnotation.ignore().equals(Test.EMPTY)) {
+            statistic.addNote("Test " + test.getName() + " ignored. Reason: " + testAnnotation.ignore());
+            return;
+        }
 
-        try {
-            if (before != null) {
+        if (before != null) {
+            try {
                 before.invoke(instance);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new XUnitException("Problem with " + before.getName() + " method.");
             }
+            statistic.addNote("Method " + before.getName() + " finished.");
+        }
 
+        long startTime = System.currentTimeMillis(), time;
+        try {
             test.invoke(instance);
-
-            if (after != null) {
-                after.invoke(instance);
-            }
-
         } catch (InvocationTargetException error) {
-            long time = System.currentTimeMillis() - startTime;
-            Test testAnnotation = test.getAnnotation(Test.class);
+            time = System.currentTimeMillis() - startTime;
             if (!testAnnotation.expected().equals(error.getClass())) {
                 statistic.addRecord(test.getName(), time, TestResult.FAILED,
                         "unexpected exception " + error.getCause().getClass().getName());
@@ -111,18 +129,29 @@ public class XUnitWorker {
                         "expected exception " + error.getCause().getClass().getName());
             }
         } catch (IllegalAccessException error) {
-            long time = System.currentTimeMillis() - startTime;
+            time = System.currentTimeMillis() - startTime;
             statistic.addRecord(test.getName(), time, TestResult.FAILED,
                     "unexpected exception " + error.getCause().getClass().getName());
         }
 
-        long time = System.currentTimeMillis() - startTime;
+        time = System.currentTimeMillis() - startTime;
 
         statistic.addRecord(test.getName(), time, TestResult.PASSED, "");
+
+        if (after != null) {
+            try {
+                after.invoke(instance);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new XUnitException("Problem with " + after.getName() + " method.");
+            }
+            statistic.addNote("Method " + after.getName() + " finished.");
+
+        }
     }
 
     private static void addTests(Class testClass) throws XUnitException, TwoSameAnnotationException {
         for (Method current : testClass.getDeclaredMethods()) {
+            current.setAccessible(true);
             int annotationCount = 0;
             if (current.getAnnotation(Test.class) != null) {
                 tests.add(current);
@@ -166,6 +195,4 @@ public class XUnitWorker {
             }
         }
     }
-
-
 }
