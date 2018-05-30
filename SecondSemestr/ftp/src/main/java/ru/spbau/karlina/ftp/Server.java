@@ -34,7 +34,8 @@ public class Server {
                 pool.submit(makeTask(clientSocket));
             }
             logger.info("Server finished.");
-        } catch (Exception e) {
+        } catch (IOException e) {
+            logger.info("Problem with socket on server side: " + e.getMessage());
         }
     }
 
@@ -45,7 +46,7 @@ public class Server {
     private void listDirectoryContent(@NotNull String path, @NotNull DataOutputStream out) throws IOException {
         File file = new File(path);
 
-        if (file == null || !file.isDirectory()) {
+        if (!file.exists() || !file.isDirectory()) {
             out.writeInt(0);
             return;
         }

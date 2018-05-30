@@ -11,17 +11,26 @@ import java.util.ArrayList;
  * Client representation that can send 2 type of request to server.
  */
 public class Client implements AutoCloseable {
+    private final static int PORT = 40444;
     private final DataOutputStream dataOutputStream;
     private final Socket socket;
     private final DataInputStream dataInputStream;
     private final int BUFFER_SIZE = 2048;
+
+
+    public static void main(String[] args) {
+        try {
+            Client client = new Client("localhost", PORT);
+        } catch (IOException e) {
+            System.out.println("Problem with socket on server side: " + e.getMessage());
+        }
+    }
 
     /**
      * Create socket to make connection with server.
      *
      * @param host - server IP address.
      * @param port - server port.
-     *
      * @throws IOException - if there is problem with creating streams.
      */
     public Client(@NotNull String host, int port) throws IOException {
@@ -36,7 +45,6 @@ public class Client implements AutoCloseable {
      * @param dirName - path to directory.
      * @return list of pairs: name of content in given catalog and
      * true if it directory and false if it file
-     *
      * @throws IOException - if there is problem with reading from stream or writing to stream.
      */
     @NotNull
@@ -63,7 +71,6 @@ public class Client implements AutoCloseable {
      *
      * @param fileName - name of file for loading.
      * @param output   - stream to save file.
-     *
      * @throws IOException - if there is problem with reading from stream or writing to stream.
      */
     public void getFileContent(@NotNull String fileName, @NotNull OutputStream output) throws IOException {

@@ -55,7 +55,7 @@ public class ClientTest {
         HashSet<Pair<String, Boolean>> expected = new HashSet<>();
         String first = "firstDir";
         String second = "first.txt";
-        expected.add(new Pair(first, true));
+        expected.add(new Pair<>(first, true));
         expected.add(new Pair<>(second, false));
         assertEquals(2, list.size());
         assertTrue(expected.contains(list.get(1)));
