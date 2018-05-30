@@ -27,27 +27,31 @@ public class XUnitWorkerTest {
 
     @org.junit.Test
     public void testEmptyClass() throws Exception {
-        XUnitWorker.runTests(Empty.class);
+        XUnitWorker worker = new XUnitWorker();
+        worker.runTests(Empty.class);
         assertEquals("", outContent.toString().trim());
     }
 
     @org.junit.Test
     public void testWithIgnore() throws Exception {
-        XUnitWorker.runTests(TestWithIgnore.class);
+        XUnitWorker worker = new XUnitWorker();
+        worker.runTests(TestWithIgnore.class);
         assertEquals("Test testIgnored ignored. Reason: not ready",
                 outContent.toString().trim());
     }
 
     @org.junit.Test
     public void testSimpleTest() throws Exception {
-        XUnitWorker.runTests(SimpleTest.class);
+        XUnitWorker worker = new XUnitWorker();
+        worker.runTests(SimpleTest.class);
         assertEquals("Test simple has finished after 0 mls.\n" +
                 "Result is : PASSED", outContent.toString().trim());
     }
 
     @org.junit.Test
     public void testBeforeAndAfterTest() throws Exception {
-        XUnitWorker.runTests(BeforeAndAfterClass.class);
+        XUnitWorker worker = new XUnitWorker();
+        worker.runTests(BeforeAndAfterClass.class);
         assertEquals("Method before finished.\n" +
                 "\n" +
                 "Summer.\n" +

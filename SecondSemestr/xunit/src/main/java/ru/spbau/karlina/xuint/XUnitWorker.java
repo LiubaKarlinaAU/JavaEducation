@@ -15,12 +15,12 @@ import java.util.logging.Logger;
  * Class for running test with annotations.
  */
 public class XUnitWorker {
-    private static Statistic statistic = new Statistic(System.out);
-    private static Method before;
-    private static Method beforeClass;
-    private static Method after;
-    private static Method afterClass;
-    private static ArrayList<Method> tests = new ArrayList<>();
+    private Statistic statistic = new Statistic(System.out);
+    private Method before;
+    private Method beforeClass;
+    private Method after;
+    private Method afterClass;
+    private ArrayList<Method> tests = new ArrayList<>();
 
     /**
      * Run tests from given class name.
@@ -42,7 +42,8 @@ public class XUnitWorker {
             return;
         }
 
-        runTests(testClass);
+        XUnitWorker worker = new XUnitWorker();
+        worker.runTests(testClass);
     }
 
 
@@ -51,7 +52,7 @@ public class XUnitWorker {
      *
      * @param testClass - class with tests to be run.
      */
-    public static void runTests(Class testClass) {
+    public void runTests(Class testClass) {
         tests = new ArrayList<>();
         before = null;
         beforeClass = null;
@@ -71,7 +72,7 @@ public class XUnitWorker {
         }
     }
 
-    private static void invokeTests(Class testClass) throws XUnitException {
+    private void invokeTests(Class testClass) throws XUnitException {
         Object instance;
         try {
             instance = testClass.newInstance();
@@ -100,7 +101,7 @@ public class XUnitWorker {
         }
     }
 
-    private static void runTest(Object instance, Method test) throws XUnitException {
+    private void runTest(Object instance, Method test) throws XUnitException {
         Test testAnnotation = test.getAnnotation(Test.class);
         if (!testAnnotation.ignore().equals(Test.EMPTY)) {
             statistic.addNote("Test " + test.getName() + " ignored. Reason: " + testAnnotation.ignore());
@@ -149,7 +150,7 @@ public class XUnitWorker {
         }
     }
 
-    private static void addTests(Class testClass) throws XUnitException, TwoSameAnnotationException {
+    private void addTests(Class testClass) throws XUnitException, TwoSameAnnotationException {
         for (Method current : testClass.getDeclaredMethods()) {
             current.setAccessible(true);
             int annotationCount = 0;
