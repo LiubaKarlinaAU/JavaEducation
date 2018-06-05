@@ -8,16 +8,15 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static ru.spbau.karlina.ftp.CommonConstants.*;
+
 /**
  * Client representation that can send 2 type of request to server.
  */
 public class Client implements AutoCloseable {
-    private final static int PORT = 40444;
     private final DataOutputStream dataOutputStream;
     private final Socket socket;
     private final DataInputStream dataInputStream;
-    private final int BUFFER_SIZE = 2048;
-
 
     /**
      * Main method to create client and start sending requests.
@@ -35,7 +34,7 @@ public class Client implements AutoCloseable {
         System.out.println("write 'exit' if you would like to shut down application.");
 
         try {
-            Client client = new Client("localhost", PORT);
+            Client client = new Client(LOCAL_HOST, PORT);
             Scanner reader = new Scanner(System.in);
             client.run(reader);
         } catch (IOException e) {

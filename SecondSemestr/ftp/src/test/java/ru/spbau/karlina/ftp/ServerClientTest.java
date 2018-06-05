@@ -11,23 +11,19 @@ import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.spbau.karlina.ftp.CommonConstants.*;
+import static ru.spbau.karlina.ftp.CommonStringConstant.*;
 
 
 public class ServerClientTest {
-    private final static String LOCALHOST = "localhost";
-    private final int PORT = 40444;
     private Thread serverThread;
-    private final String firstDirName = "./src/test/resources";
-    private final String secondDirName = "./src/test/resources/firstDir";
-    private final String firstFileName = "./src/test/resources/first.txt";
-    private final String secondFileName = "./src/test/resources/firstDir/second.txt";
     private Client client;
 
     @Before
     public void setOutStream() throws InterruptedException, IOException {
         serverThread = runServer();
         Thread.sleep(500);
-        client = new Client(LOCALHOST, PORT);
+        client = new Client(LOCAL_HOST, PORT);
     }
 
     @After

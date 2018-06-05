@@ -5,18 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
+
+import static ru.spbau.karlina.ftp.CommonConstants.*;
 
 /**
  * Server program representation that can do listing of directory and file content showing.
  */
 public class Server {
-    private static final int BUFFER_SIZE = 1024;
     private Logger logger = Logger.getGlobal();
-    private final int PORT = 40444;
     private ExecutorService pool = Executors.newCachedThreadPool();
 
     public static void main(String[] args) {
