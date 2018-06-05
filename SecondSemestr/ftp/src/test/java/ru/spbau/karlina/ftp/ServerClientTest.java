@@ -32,7 +32,7 @@ public class ServerClientTest {
         serverThread.interrupt();
     }
 
-    public static Thread runServer() {
+    private Thread runServer() {
         Thread serverThread = new Thread(() -> {
             Server server = new Server();
             server.run();

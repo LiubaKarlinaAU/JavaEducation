@@ -16,7 +16,6 @@ import java.util.HashSet;
 import static org.junit.Assert.*;
 import static ru.spbau.karlina.ftp.CommonConstants.*;
 import static ru.spbau.karlina.ftp.CommonStringConstant.*;
-import static ru.spbau.karlina.ftp.ServerClientTest.runServer;
 
 
 public class ServerTest {
@@ -90,4 +89,15 @@ public class ServerTest {
 
         assertEquals(outputStream.toString().trim(), "1234");
     }
+
+    private Thread runServer() {
+        Thread serverThread = new Thread(() -> {
+            Server server = new Server();
+            server.run();
+        });
+        serverThread.start();
+
+        return serverThread;
+    }
+
 }
