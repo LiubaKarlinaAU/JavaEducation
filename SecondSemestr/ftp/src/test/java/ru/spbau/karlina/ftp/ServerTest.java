@@ -16,15 +16,19 @@ import java.util.HashSet;
 import static org.junit.Assert.*;
 import static ru.spbau.karlina.ftp.CommonConstants.*;
 import static ru.spbau.karlina.ftp.CommonStringConstant.*;
+import static ru.spbau.karlina.ftp.ServerClientTest.runServer;
 
 
 public class ServerTest {
+    private Thread serverThread;
     private DataOutputStream dataOutputStream;
     private Socket socket;
     private DataInputStream dataInputStream;
 
     @Before
-    public void initialize() throws IOException {
+    public void initialize() throws IOException, InterruptedException {
+        serverThread = runServer();
+        Thread.sleep(500);
         socket = new Socket(LOCAL_HOST, PORT);
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
@@ -35,6 +39,7 @@ public class ServerTest {
         dataInputStream.close();
         dataOutputStream.close();
         socket.close();
+        serverThread.interrupt();
     }
 
     @Test
