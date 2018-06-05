@@ -57,6 +57,7 @@ public class Server {
             out.writeUTF(fileName);
             out.writeBoolean(subFile.isDirectory());
         }
+
         out.flush();
     }
 
@@ -82,8 +83,8 @@ public class Server {
             dataOutputStream.write(buffer, 0, bufferLen);
             bufferLen = fileInputStream.read(buffer);
         }
-        dataOutputStream.flush();
 
+        dataOutputStream.flush();
     }
 
     private Runnable makeTask(Socket socket) {
