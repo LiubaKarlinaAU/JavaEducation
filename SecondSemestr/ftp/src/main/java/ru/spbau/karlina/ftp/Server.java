@@ -5,17 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
+
+import static ru.spbau.karlina.ftp.CommonConstants.*;
 
 /**
  * Server program representation that can do listing of directory and file content showing.
  */
 public class Server {
     private Logger logger = Logger.getGlobal();
-    private final int PORT = 40444;
     private ExecutorService pool = Executors.newCachedThreadPool();
 
     public static void main(String[] args) {
@@ -34,7 +34,8 @@ public class Server {
                 pool.submit(makeTask(clientSocket));
             }
             logger.info("Server finished.");
-        } catch (Exception e) {
+        } catch (IOException e) {
+            logger.info("Problem with socket on server side: " + e.getMessage());
         }
     }
 
@@ -45,7 +46,7 @@ public class Server {
     private void listDirectoryContent(@NotNull String path, @NotNull DataOutputStream out) throws IOException {
         File file = new File(path);
 
-        if (file == null || !file.isDirectory()) {
+        if (!file.exists() || !file.isDirectory()) {
             out.writeInt(0);
             return;
         }
@@ -56,6 +57,7 @@ public class Server {
             out.writeUTF(fileName);
             out.writeBoolean(subFile.isDirectory());
         }
+
         out.flush();
     }
 
@@ -66,16 +68,22 @@ public class Server {
     private void getFileContent(@NotNull String fileName, @NotNull DataOutputStream dataOutputStream) throws IOException {
         File file = new File(fileName);
 
-        if (file == null || file.isDirectory()) {
+        if (!file.exists() || file.isDirectory()) {
             dataOutputStream.writeInt(0);
             return;
         }
 
         dataOutputStream.writeLong(file.length());
-        Scanner scanner = new Scanner(file);
-        while (scanner.hasNextLine()) {
-            dataOutputStream.write(scanner.nextLine().getBytes());
+
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] buffer = new byte[BUFFER_SIZE];
+
+        int bufferLen = fileInputStream.read(buffer);
+        while (bufferLen > 0) {
+            dataOutputStream.write(buffer, 0, bufferLen);
+            bufferLen = fileInputStream.read(buffer);
         }
+
         dataOutputStream.flush();
     }
 
