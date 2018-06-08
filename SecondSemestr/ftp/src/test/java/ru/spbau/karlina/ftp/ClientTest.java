@@ -81,7 +81,7 @@ public class ClientTest {
 
         return serverThread;
     }
-    
+
     private void listDirectoryContent(@NotNull String path, @NotNull DataOutputStream out) throws IOException {
         File file = new File(path);
 
