@@ -105,11 +105,12 @@ public class Server {
             } catch (EOFException e) {
                 logger.info("close connection");
             } catch (IOException e) {
-
+                logger.info("Problem in makeTask: " + e.getMessage());
             } finally {
                 try {
                     socket.close();
                 } catch (IOException e) {
+                    logger.info("Trying to close socket but: " + e.getMessage());
                 }
             }
         };
