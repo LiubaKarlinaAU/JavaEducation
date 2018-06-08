@@ -120,8 +120,7 @@ public class FtpWorker {
         gridPane.getChildren().clear();
 
         Label labelDirPath = new Label("Save file as ");
-        TextField fieldDirPath = new TextField();
-        fieldDirPath.setText(item);
+        TextField fieldDirPath = new TextField("copied_" + item);
 
         Button enterButton = new Button("Enter");
 

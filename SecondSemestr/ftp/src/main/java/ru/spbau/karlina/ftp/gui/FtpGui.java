@@ -37,7 +37,8 @@ public class FtpGui extends Application {
         root.setMinHeight(100);
 
         Label labelHostName = new Label("Host name");
-        TextField fieldHostName = new TextField();
+        TextField fieldHostName = new TextField("localhost");
+
         Button enterButton = new Button("Enter");
 
         enterButton.setOnAction(actionEvent -> {

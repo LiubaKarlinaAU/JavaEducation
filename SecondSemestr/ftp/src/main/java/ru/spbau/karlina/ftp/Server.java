@@ -105,6 +105,7 @@ public class Server {
             } catch (EOFException e) {
                 logger.info("close connection");
             } catch (IOException e) {
+
             } finally {
                 try {
                     socket.close();
